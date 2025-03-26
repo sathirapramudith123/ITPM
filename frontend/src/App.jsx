@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Login from '../src/components/Login';
-import Signup from '../src/components/Register'; // New import
-import Profile from '../src/components/Profile';
+import Login from '../src/components/Login.jsx';
+import Signup from '../src/components/Register.jsx'; // New import
+import Profile from '../src/components/Profile.jsx';
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token') || '');
