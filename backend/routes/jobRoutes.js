@@ -1,6 +1,6 @@
 import express from 'express';
-import { createJob, getJobs, getJobById, updateJob, deleteJob, getEmployerJobs } from '../controllers/jobController.js';
-import auth from '../middleware/auth.js'; // Assuming auth middleware exists
+import { createJob, getJobs, getJobById, updateJob, deleteJob, getEmployerJobs } from '../controller/jobController.js';
+import { authenticateUser } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -9,9 +9,9 @@ router.get('/', getJobs); // Search and filter jobs
 router.get('/:id', getJobById); // Get job details
 
 // Protected routes (employers)
-router.post('/', auth, createJob); // Create job
-router.put('/:id', auth, updateJob); // Update job
-router.delete('/:id', auth, deleteJob); // Delete job
-router.get('/employer/jobs', auth, getEmployerJobs); // Employer dashboard
+router.post('/', authenticateUser, createJob); // Create job
+router.put('/:id', authenticateUser, updateJob); // Update job
+router.delete('/:id', authenticateUser, deleteJob); // Delete job
+router.get('/employer/jobs', authenticateUser, getEmployerJobs); // Employer dashboard
 
 export default router;

@@ -1,17 +1,54 @@
+// authMiddleware.js
 import jwt from 'jsonwebtoken';
 
-const auth = (req, res, next) => {
+export const authenticateUser = (req, res, next) => {
   const token = req.header('Authorization')?.replace('Bearer ', '');
+
   if (!token) {
     return res.status(401).json({ message: 'No token, authorization denied' });
   }
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // Sets req.user.id for getProfile
+    if (!decoded.id) {
+      return res.status(401).json({ message: 'Invalid token payload: missing user ID' });
+    }
+
+    req.user = {
+      _id: decoded.id,
+      role: decoded.role
+    };
     next();
   } catch (error) {
+    console.error('Token error:', error.message);
     res.status(401).json({ message: 'Token is not valid' });
   }
 };
 
-export default auth;
+export const authenticateAdmin = (req, res, next) => {
+  const token = req.header('Authorization')?.replace('Bearer ', '');
+
+  if (!token) {
+    return res.status(401).json({ message: 'No token, authorization denied' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded.id) {
+      return res.status(401).json({ message: 'Invalid token payload: missing user ID' });
+    }
+
+    if (decoded.role !== 'admin') {
+      return res.status(403).json({ message: 'Admin access required' });
+    }
+
+    req.user = {
+      _id: decoded.id,
+      role: decoded.role
+    };
+    next();
+  } catch (error) {
+    console.error('Token error:', error.message);
+    res.status(401).json({ message: 'Token is not valid' });
+  }
+};

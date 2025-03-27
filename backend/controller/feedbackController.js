@@ -1,7 +1,12 @@
-import Feedback from '../models/Feedback.js';
+// controllers/feedbackController.js
+import Feedback from '../models/feedbackModels.js';
 
 export const submitFeedback = async (req, res) => {
   try {
+    if (!req.user || !req.user._id) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+    
     const { rating, comment, suggestion } = req.body;
     
     const feedback = new Feedback({
@@ -53,23 +58,9 @@ export const updateFeedbackStatus = async (req, res) => {
 export const analyzeFeedback = async (req, res) => {
   try {
     const keywords = await Feedback.aggregate([
-      {
-        $project: {
-          words: {
-            $split: [
-              { $concat: ['$comment', ' ', '$suggestion'] },
-              ' '
-            ]
-          }
-        }
-      },
+      { $project: { words: { $split: [{ $concat: ['$comment', ' ', '$suggestion'] }, ' '] } } },
       { $unwind: '$words' },
-      {
-        $group: {
-          _id: '$words',
-          count: { $sum: 1 }
-        }
-      },
+      { $group: { _id: '$words', count: { $sum: 1 } } },
       { $sort: { count: -1 } },
       { $limit: 10 }
     ]);
@@ -77,5 +68,68 @@ export const analyzeFeedback = async (req, res) => {
     res.status(200).json({ keywords });
   } catch (error) {
     res.status(500).json({ message: 'Error analyzing feedback', error: error.message });
+  }
+};
+
+// New: Update Feedback (for job_seeker/employer own feedback, admin any feedback)
+export const updateFeedback = async (req, res) => {
+  try {
+    if (!req.user || !req.user._id) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    const { feedbackId } = req.params;
+    const { rating, comment, suggestion } = req.body;
+
+    const feedback = await Feedback.findById(feedbackId);
+    if (!feedback) {
+      return res.status(404).json({ message: 'Feedback not found' });
+    }
+
+    // Check ownership or admin role
+    const isOwner = feedback.userId.toString() === req.user._id.toString();
+    const isAdmin = req.user.role === 'admin';
+    if (!isOwner && !isAdmin) {
+      return res.status(403).json({ message: 'You can only update your own feedback or need admin access' });
+    }
+
+    // Update allowed fields
+    feedback.rating = rating || feedback.rating;
+    feedback.comment = comment || feedback.comment;
+    feedback.suggestion = suggestion || feedback.suggestion;
+    feedback.updatedAt = Date.now();
+
+    await feedback.save();
+    res.status(200).json({ message: 'Feedback updated successfully', feedback });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating feedback', error: error.message });
+  }
+};
+
+// New: Delete Feedback (for job_seeker/employer own feedback, admin any feedback)
+export const deleteFeedback = async (req, res) => {
+  try {
+    if (!req.user || !req.user._id) {
+      return res.status(401).json({ message: 'User not authenticated' });
+    }
+
+    const { feedbackId } = req.params;
+
+    const feedback = await Feedback.findById(feedbackId);
+    if (!feedback) {
+      return res.status(404).json({ message: 'Feedback not found' });
+    }
+
+    // Check ownership or admin role
+    const isOwner = feedback.userId.toString() === req.user._id.toString();
+    const isAdmin = req.user.role === 'admin';
+    if (!isOwner && !isAdmin) {
+      return res.status(403).json({ message: 'You can only delete your own feedback or need admin access' });
+    }
+
+    await Feedback.findByIdAndDelete(feedbackId);
+    res.status(200).json({ message: 'Feedback deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting feedback', error: error.message });
   }
 };

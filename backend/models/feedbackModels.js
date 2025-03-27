@@ -1,3 +1,4 @@
+// models/feedbackModels.js
 import mongoose from 'mongoose';
 
 const feedbackSchema = new mongoose.Schema({
@@ -22,19 +23,20 @@ const feedbackSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'reviewed', 'responded'],
+    enum: ['pending', 'reviewed', 'resolved'],
     default: 'pending'
   },
   adminResponse: {
     type: String,
-    default: null
+    trim: true
   },
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  updatedAt: {
+    type: Date
   }
-}, {
-  timestamps: true
 });
 
 export default mongoose.model('Feedback', feedbackSchema);

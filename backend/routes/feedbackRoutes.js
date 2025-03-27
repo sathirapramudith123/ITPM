@@ -1,15 +1,25 @@
+// routes/feedbackRoutes.js
 import express from 'express';
-import * as feedbackController from '../controller/feedbackController.js';
-import * as authMiddleware from '../middleware/auth.js';
+import { authenticateUser, authenticateAdmin } from '../middleware/authMiddleware.js';
+import { 
+  submitFeedback, 
+  getAllFeedback, 
+  updateFeedbackStatus, 
+  analyzeFeedback,
+  updateFeedback,      // New
+  deleteFeedback       // New
+} from '../controller/feedbackController.js';
 
 const router = express.Router();
 
-// User routes
-router.post('/submit', authMiddleware.authenticateUser, feedbackController.submitFeedback);
+// Any authenticated user (job_seeker, employer, admin)
+router.post('/submit', authenticateUser, submitFeedback);
+router.put('/update/:feedbackId', authenticateUser, updateFeedback);  // New
+router.delete('/delete/:feedbackId', authenticateUser, deleteFeedback); // New
 
-// Admin routes
-router.get('/all', authMiddleware.authenticateAdmin, feedbackController.getAllFeedback);
-router.put('/:feedbackId', authMiddleware.authenticateAdmin, feedbackController.updateFeedbackStatus);
-router.get('/analyze', authMiddleware.authenticateAdmin, feedbackController.analyzeFeedback);
+// Admin-only routes
+router.get('/all', authenticateAdmin, getAllFeedback);
+router.put('/status/:feedbackId', authenticateAdmin, updateFeedbackStatus);
+router.get('/analyze', authenticateAdmin, analyzeFeedback);
 
 export default router;

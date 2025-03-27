@@ -1,3 +1,4 @@
+// userModels.js
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
@@ -17,6 +18,11 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true
+  },
+  role: {
+    type: String,
+    enum: ['job_seeker', 'employer', 'admin'], // Roles: job_seeker, employer, admin
+    required: true // Role is mandatory
   },
   createdAt: {
     type: Date,
