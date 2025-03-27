@@ -1,49 +1,38 @@
-import React, { useState } from 'react';
-import Login from '../src/components/Login.jsx';
-import Signup from '../src/components/Register.jsx'; // New import
-import Profile from '../src/components/Profile.jsx';
+import { Routes, Route } from 'react-router-dom'
+import Navbar from './components/Navbar.jsx'
+import Home from './pages/Home.jsx'
+import Login from './pages/Login.jsx'
+import Register from './pages/Register.jsx'
+import Jobs from './pages/Jobs.jsx'
+import ResumeBuilder from './pages/ResumerBuilder.jsx'
+import CareerResources from './pages/CareerResources.jsx'
+import Notifications from './pages/Notifications.jsx'
+import EmployerDashboard from './pages/EmployerDashboard.jsx'
+import Footer from './components/Footer.jsx'
+import About from './pages/About.jsx'
+import Profile from './pages/Profile.jsx'
 
 function App() {
-  const [token, setToken] = useState(localStorage.getItem('token') || '');
-  const [isSignup, setIsSignup] = useState(false); // Toggle between login/signup
-
-  const handleLogout = () => {
-    setToken('');
-    localStorage.removeItem('token');
-  };
-
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      {token ? (
-        <div className="w-full max-w-md">
-          <Profile token={token} />
-          <button
-            onClick={handleLogout}
-            className="mt-4 w-full bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
-          >
-            Logout
-          </button>
-        </div>
-      ) : (
-        <div className="w-full max-w-md">
-          {isSignup ? (
-            <Signup setToken={setToken} setIsSignup={setIsSignup} />
-          ) : (
-            <Login setToken={setToken} setIsSignup={setIsSignup} />
-          )}
-          <p className="mt-4 text-center">
-            {isSignup ? 'Already have an account?' : "Don't have an account?"}{' '}
-            <button
-              onClick={() => setIsSignup(!isSignup)}
-              className="text-blue-500 hover:underline"
-            >
-              {isSignup ? 'Login' : 'Sign Up'}
-            </button>
-          </p>
-        </div>
-      )}
+    <div className="min-h-screen bg-gray-100">
+      <Navbar />
+      <main className="container mx-auto p-4">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/jobs" element={<Jobs />} />
+          <Route path="/resume" element={<ResumeBuilder />} />
+          <Route path="/resources" element={<CareerResources />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/employer" element={<EmployerDashboard />} />
+          <Route path="/about" element={<About />} /> 
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
+      </main>
+      <Footer />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

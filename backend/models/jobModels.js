@@ -17,6 +17,11 @@ const JobSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
+    required: true,
+  },
   jobType: {
     type: String,
     enum: ['full-time', 'part-time', 'remote'],
@@ -39,6 +44,15 @@ const JobSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   }],
+  views: {
+    type: Number,
+    default: 0
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'approved', 'rejected'],
+    default: 'pending'
+  },
   createdAt: {
     type: Date,
     default: Date.now,
