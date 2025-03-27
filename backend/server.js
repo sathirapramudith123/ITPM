@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import connectDB from "./DB/db.js";
 import express from "express";
 import cors from "cors";
+import jobRoutes from "./routes/jobRoutes.js";
 
 
 
@@ -23,6 +24,7 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`); // Check the port
 });
 
+app.use("/api/job", jobRoutes );
 
 
 
