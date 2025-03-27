@@ -4,7 +4,7 @@ import connectDB from "./DB/db.js";
 import express from "express";
 import cors from "cors";
 
-
+import feedbackRoutes from "./routes/feedbackRoutes.js"
 
 
 dotenv.config();  // Load the environment variables
@@ -23,7 +23,7 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`); // Check the port
 });
 
-
+app.use("/api/feedback", feedbackRoutes);
 
 
 
