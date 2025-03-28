@@ -1,38 +1,35 @@
-import { Routes, Route } from 'react-router-dom'
-import Navbar from './components/Navbar.jsx'
-import Home from './pages/Home.jsx'
-import Login from './pages/Login.jsx'
-import Register from './pages/Register.jsx'
-import Jobs from './pages/Jobs.jsx'
-import ResumeBuilder from './pages/ResumerBuilder.jsx'
-import CareerResources from './pages/CareerResources.jsx'
-import Notifications from './pages/Notifications.jsx'
-import EmployerDashboard from './pages/EmployerDashboard.jsx'
-import Footer from './components/Footer.jsx'
-import About from './pages/About.jsx'
-import Profile from './pages/Profile.jsx'
+import React from "react";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import AdminDashboard from "./pages/AdminDashboard";
+import JobSeekerDashboard from "./pages/JobSeekerDashboard";
+import EmployerDashboard from "./pages/EmployerDashboard";
+import JobListings from "./pages/JobListings";
+import JobDetail from "./components/JobDetails";
 
 function App() {
+  const isAuthenticated = !!localStorage.getItem("token");
+  const role = localStorage.getItem("role");
+
   return (
-    <div className="min-h-screen bg-gray-100">
+    <Router>
       <Navbar />
-      <main className="container mx-auto p-4">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/jobs" element={<Jobs />} />
-          <Route path="/resume" element={<ResumeBuilder />} />
-          <Route path="/resources" element={<CareerResources />} />
-          <Route path="/notifications" element={<Notifications />} />
-          <Route path="/employer" element={<EmployerDashboard />} />
-          <Route path="/about" element={<About />} /> 
-          <Route path="/profile" element={<Profile />} />
-        </Routes>
-      </main>
-      <Footer />
-    </div>
-  )
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/admin" element={isAuthenticated && role === "admin" ? <AdminDashboard /> : <Navigate to="/login" />} />
+        <Route path="/job-seeker" element={isAuthenticated && role === "job_seeker" ? <JobSeekerDashboard /> : <Navigate to="/login" />} />
+        <Route path="/employer" element={isAuthenticated && role === "employer" ? <EmployerDashboard /> : <Navigate to="/login" />} />
+        <Route path="/jobs" element={<JobListings />} />
+        <Route path="/jobs/:id" element={<JobDetail />} />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;

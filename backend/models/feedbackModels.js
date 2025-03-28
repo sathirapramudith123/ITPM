@@ -1,42 +1,41 @@
-// models/feedbackModels.js
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const feedbackSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    ref: "User",
+    required: true,
   },
   rating: {
     type: Number,
     required: true,
     min: 1,
-    max: 5
+    max: 5,
   },
   comment: {
     type: String,
-    trim: true
+    trim: true,
   },
   suggestion: {
     type: String,
-    trim: true
+    trim: true,
   },
   status: {
     type: String,
-    enum: ['pending', 'reviewed', 'resolved'],
-    default: 'pending'
+    enum: ["pending", "reviewed", "resolved"],
+    default: "pending",
   },
   adminResponse: {
     type: String,
-    trim: true
+    trim: true,
   },
   createdAt: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   updatedAt: {
-    type: Date
-  }
+    type: Date,
+  },
 });
 
-export default mongoose.model('Feedback', feedbackSchema);
+export default mongoose.model("Feedback", feedbackSchema);

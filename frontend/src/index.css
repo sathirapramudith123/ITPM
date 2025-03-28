@@ -2,3 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom Design System */
+:root {
+  --primary: #1D4ED8;
+  --secondary: #10B981;
+  --accent: #F59E0B;
+  --neutral: #1F2937;
+  --background: #F9FAFB;
+}
+
+/* Apply base styles without @apply */
+body {
+  background-color: var(--background);
+  color: var(--neutral);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Custom component classes */
+.btn {
+  @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
+}
+
+.btn-primary {
+  @apply bg-primary text-white hover:bg-blue-600;
+}
+
+.btn-secondary {
+  @apply bg-secondary text-white hover:bg-green-600;
+}
+
+.card {
+  @apply bg-white p-6 rounded-lg shadow-md;
+}

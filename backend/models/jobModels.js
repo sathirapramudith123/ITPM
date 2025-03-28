@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const JobSchema = new mongoose.Schema({
   title: {
@@ -19,12 +19,12 @@ const JobSchema = new mongoose.Schema({
   },
   category: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category',
+    ref: "Category",
     required: true,
   },
   jobType: {
     type: String,
-    enum: ['full-time', 'part-time', 'remote'],
+    enum: ["full-time", "part-time", "remote"],
     required: true,
   },
   requirements: {
@@ -37,21 +37,23 @@ const JobSchema = new mongoose.Schema({
   },
   employer: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: "User",
     required: true,
   },
-  applicants: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-  }],
+  applicants: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
   views: {
     type: Number,
-    default: 0
+    default: 0,
   },
   status: {
     type: String,
-    enum: ['pending', 'approved', 'rejected'],
-    default: 'pending'
+    enum: ["pending", "approved", "rejected"],
+    default: "pending",
   },
   createdAt: {
     type: Date,
@@ -59,4 +61,4 @@ const JobSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model('Job', JobSchema);
+export default mongoose.model("Job", JobSchema);
