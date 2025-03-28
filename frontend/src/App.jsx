@@ -9,6 +9,8 @@ import JobSeekerDashboard from "./pages/JobSeekerDashboard";
 import EmployerDashboard from "./pages/EmployerDashboard";
 import JobListings from "./pages/JobListings";
 import JobDetail from "./components/JobDetails";
+import Footer from "./components/Footer";
+
 
 function App() {
   const isAuthenticated = !!localStorage.getItem("token");
@@ -16,7 +18,9 @@ function App() {
 
   return (
     <Router>
+      <div className="min-h-screen flex flex-col">
       <Navbar />
+      <main className="flex-grow">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -28,6 +32,9 @@ function App() {
         <Route path="/jobs/:id" element={<JobDetail />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
+      </main>
+      <Footer/>
+      </div>
     </Router>
   );
 }
