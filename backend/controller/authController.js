@@ -20,7 +20,7 @@ export const register = async (req, res) => {
     await user.save();
 
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
-      expiresIn: "15d",
+      expiresIn: "20min",
     });
 
     res.status(201).json({
@@ -66,7 +66,7 @@ export const login = async (req, res) => {
 
 export const getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select("-password");
+    const user = await User.findById(req.user.id).select("-password");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -80,7 +80,7 @@ export const updateProfile = async (req, res) => {
   const { username, email } = req.body;
 
   try {
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user.id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -92,6 +92,40 @@ export const updateProfile = async (req, res) => {
     res.json({
       user: { id: user._id, username: user.username, email: user.email, role: user.role },
     });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const searchUsers = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ message: "Access denied. Admins only." });
+  }
+
+  const { role, search } = req.query;
+
+  try {
+    let query = {};
+
+    if (role) {
+      query.role = role;
+    }
+
+    if (search) {
+      query.$or = [
+        { username: { $regex: search, $options: "i" } },
+        { email: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    const users = await User.find(query).select("-password");
+
+    res.json(users);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
