@@ -77,32 +77,33 @@ const JobCard = ({ job, onViewApplicants }) => {
 const EmployerDashboard = () => {
   const [jobs, setJobs] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("active");
   const [showJobForm, setShowJobForm] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [jobsResponse, categoriesResponse] = await Promise.all([
-          axios.get("/employer/jobs"),
-          axios.get("/categories"),
-        ]);
-        setJobs(jobsResponse.data);
-        setCategories(categoriesResponse.data);
-      } catch (err) {
-        setError(err.response?.data?.message || "Failed to load dashboard data");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
+    fetchCategories();
   }, []);
+
+  const fetchCategories = async () => {
+    try {
+      console.log('=================================')
+      const response = await axios.post('/admin/categories', { action: 'list' });
+      console.log(response.data)
+      setCategories(response.data);
+      setError(null);
+    } catch (error) {
+      setError('Failed to load categories ===============================');
+      console.error('Error fetching categories:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmitJob = async (formData) => {
     try {
-      const response = await axios.post("/jobs", formData);
+      const response = await axios.post('/job/jobs', formData);
       setJobs([...jobs, response.data]);
       setShowJobForm(false);
     } catch (err) {

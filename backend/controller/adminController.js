@@ -78,6 +78,7 @@ export const manageCategories = async (req, res) => {
         await Category.findByIdAndDelete(categoryId);
         return res.json({ message: "Category deleted" });
       case "list":
+        console.log ( '=====================================')
         const categories = await Category.find().sort({ name: 1 });
         return res.json(categories);
       default:

@@ -1,7 +1,7 @@
 import Job from "../models/jobModels.js";
 import Category from "../models/categoryModels.js";
 import { validationResult } from "express-validator";
-import { notifyEmployer, notifyJobSeekers } from "./notificationController.js";
+//import { notifyEmployer, notifyJobSeekers } from "./notificationController.js";
 
 // Create a new job posting
 export const createJob = async (req, res) => {
@@ -134,4 +134,4 @@ export const getCategories = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-};
+}; 
