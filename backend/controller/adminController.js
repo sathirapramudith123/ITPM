@@ -1,8 +1,10 @@
 import Job from "../models/jobModels.js";
 import User from "../models/userModels.js";
 import Category from "../models/categoryModels.js";
-import { notifyJobSeekers } from "./notificationController.js";
+import Resume from "../models/resumeModels.js"; // Assuming this exists for deleteUser cleanup
+import { notifyJobSeekers } from "../controller/notificationController.js";
 
+// Approve or reject job postings
 export const manageJobPostings = async (req, res) => {
   try {
     const { jobId, action } = req.body;
@@ -20,7 +22,7 @@ export const manageJobPostings = async (req, res) => {
       status: action === "approve" ? "approved" : "rejected",
     });
     if (action === "approve") {
-      await notifyJobSeekers(jobId);
+      await notifyJobSeekers(jobId); // Notify job seekers when a job is approved
     }
     res.json({ message: `Job ${action}d successfully` });
   } catch (error) {
@@ -28,6 +30,7 @@ export const manageJobPostings = async (req, res) => {
   }
 };
 
+// Manage user roles (job_seeker, employer, admin)
 export const manageUserRoles = async (req, res) => {
   try {
     const { userId, role } = req.body;
@@ -46,6 +49,7 @@ export const manageUserRoles = async (req, res) => {
   }
 };
 
+// Manage job categories (create, update, delete, list)
 export const manageCategories = async (req, res) => {
   try {
     const { action, categoryId, name, description } = req.body;
@@ -74,7 +78,7 @@ export const manageCategories = async (req, res) => {
         await Category.findByIdAndDelete(categoryId);
         return res.json({ message: "Category deleted" });
       case "list":
-        const categories = await Category.find();
+        const categories = await Category.find().sort({ name: 1 });
         return res.json(categories);
       default:
         return res.status(400).json({ message: "Invalid action" });
@@ -82,9 +86,7 @@ export const manageCategories = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-};
-
-// New: Get all jobs for admin overview
+};// Get all jobs with optional status filter
 export const getAllJobs = async (req, res) => {
   try {
     const { status } = req.query; // Filter by status (pending, approved, rejected)
@@ -98,19 +100,19 @@ export const getAllJobs = async (req, res) => {
   }
 };
 
-// New: Get all users with filtering
+// Get all users with optional role filter
 export const getAllUsers = async (req, res) => {
   try {
     const { role } = req.query; // Filter by role (job_seeker, employer, admin)
     const query = role ? { role } : {};
-    const users = await User.find(query).select("-password");
+    const users = await User.find(query).select("-password"); // Exclude password from response
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// New: Delete a user
+// Delete a user and clean up related data
 export const deleteUser = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -123,9 +125,9 @@ export const deleteUser = async (req, res) => {
     }
 
     await User.findByIdAndDelete(userId);
-    // Optionally, clean up related data (e.g., jobs, resumes)
-    await Job.deleteMany({ employer: userId });
-    await Resume.deleteOne({ userId });
+    // Clean up related data
+    await Job.deleteMany({ employer: userId }); // Delete jobs posted by the user
+    await Resume.deleteOne({ userId }); // Delete user's resume (assumes Resume model exists)
     res.json({ message: "User deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });

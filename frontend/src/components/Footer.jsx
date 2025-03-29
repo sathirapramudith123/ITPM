@@ -88,13 +88,13 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Contact & Map */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-white">Contact Us</h3>
-            <ul className="space-y-3 text-sm">
+            <ul className="space-y-3 text-sm mb-4">
               <li className="flex items-start">
                 <FaMapMarkerAlt className="text-blue-500 mt-1 mr-3 flex-shrink-0" />
-                <span className="text-gray-400">123 Career Street, Tech City, TC 10001</span>
+                <span className="text-gray-400">No. 123, Galle Road, Colombo 03, Sri Lanka</span>
               </li>
               <li className="flex items-center">
                 <FaEnvelope className="text-blue-500 mr-3" />
@@ -104,11 +104,25 @@ const Footer = () => {
               </li>
               <li className="flex items-center">
                 <FaPhone className="text-blue-500 mr-3" />
-                <a href="tel:+15551234567" className="text-gray-400 hover:text-white transition-colors">
-                  +1 (555) 123-4567
+                <a href="tel:+94112345678" className="text-gray-400 hover:text-white transition-colors">
+                  +94 112 345 678
                 </a>
               </li>
             </ul>
+            
+            {/* Google Map Embed */}
+            <div className="h-40 w-full rounded-lg overflow-hidden border border-gray-700">
+              <iframe
+                title="CareerPlus Colombo Office"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.798511757686!2d79.85308041539345!3d6.921668495003785!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2593e65e5a5e5%3A0x6f6ac8a7a9a7a9a7!2sGalle%20Road%2C%20Colombo%2003%2C%20Sri%20Lanka!5e0!3m2!1sen!2sus!4v1620000000000!5m2!1sen!2sus"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
           </div>
         </div>
 

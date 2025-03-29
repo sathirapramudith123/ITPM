@@ -1,102 +1,74 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { motion } from "framer-motion";
-import { FaUser, FaBriefcase, FaSignOutAlt, FaChevronDown, FaBell, FaSearch } from "react-icons/fa";
+import { Disclosure, Menu, Transition } from '@headlessui/react';
+import { Link, useNavigate } from 'react-router-dom'; // Added useNavigate for logout redirect
+import { FaUser, FaBriefcase, FaSignOutAlt, FaChevronDown, FaBell, FaSearch } from 'react-icons/fa';
+import ThemeToggle from './ThemeToggle';
 
-const Navbar = () => {
-  const isAuthenticated = !!localStorage.getItem("token");
-  const role = localStorage.getItem("role");
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
-  const navigate = useNavigate();
+export default function Navbar() {
+  const isAuthenticated = !!localStorage.getItem('token');
+  const role = localStorage.getItem('role');
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const navigate = useNavigate(); // For programmatic navigation
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("user");
-    navigate("/login");
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    localStorage.removeItem('user');
+    navigate('/login'); // Use navigate instead of window.location.href for React Router
   };
 
+  // Navigation links based on role
+  const navLinks = [
+    { name: 'Jobs', href: '/jobs', show: true },
+    { name: 'Dashboard', href: role === 'admin' ? '/admin' : role === 'job_seeker' ? '/job-seeker' : '/employer', show: isAuthenticated },
+  ];
+
   return (
-    <Disclosure as="nav" className="bg-white shadow-md">
+    <Disclosure as="nav" className="bg-white dark:bg-gray-800 shadow-md">
       {({ open }) => (
         <>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-16">
-              {/* Logo */}
+              {/* Left side */}
               <div className="flex items-center">
                 <Link to="/" className="flex-shrink-0 flex items-center">
-                  <motion.div 
-                    whileHover={{ scale: 1.05 }}
-                    className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent"
-                  >
+                  <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                     CareerPlus
-                  </motion.div>
+                  </span>
                 </Link>
-                
-                {/* Desktop Navigation */}
-                <div className="hidden md:ml-10 md:flex md:space-x-8">
-                  <Link 
-                    to="/jobs" 
-                    className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-700 hover:text-blue-600 hover:border-blue-500 transition-colors"
-                  >
-                    <FaSearch className="mr-1" /> Browse Jobs
-                  </Link>
-                  <Link 
-                    to="/companies" 
-                    className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-700 hover:text-blue-600 hover:border-blue-500 transition-colors"
-                  >
-                    <FaBriefcase className="mr-1" /> Companies
-                  </Link>
-                  <Link 
-                    to="/career-resources" 
-                    className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-700 hover:text-blue-600 hover:border-blue-500 transition-colors"
-                  >
-                    Career Resources
-                  </Link>
+                {/* Desktop navigation links */}
+                <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+                  {navLinks.map((item) =>
+                    item.show ? (
+                      <Link
+                        key={item.name}
+                        to={item.href}
+                        className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400"
+                      >
+                        {item.name}
+                      </Link>
+                    ) : null
+                  )}
                 </div>
               </div>
 
-              {/* Right side - Auth/User */}
-              <div className="hidden md:ml-6 md:flex md:items-center">
-                {!isAuthenticated ? (
-                  <div className="flex items-center space-x-4">
-                    <Link 
-                      to="/login" 
-                      className="text-sm font-medium text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md transition-colors"
-                    >
-                      Sign In
-                    </Link>
-                    <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>
-                      <Link 
-                        to="/register" 
-                        className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium shadow-sm hover:shadow-md transition-all"
-                      >
-                        Register
-                      </Link>
-                    </motion.div>
-                  </div>
-                ) : (
-                  <div className="ml-4 flex items-center md:ml-6 space-x-4">
-                    <button className="p-1 rounded-full text-gray-600 hover:text-blue-600 focus:outline-none relative">
-                      <FaBell className="h-5 w-5" />
-                      <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
+              {/* Right side */}
+              <div className="flex items-center space-x-4">
+                <ThemeToggle />
+                {isAuthenticated ? (
+                  <>
+                    <button className="p-2 text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400">
+                      <FaSearch className="h-5 w-5" />
                     </button>
-
-                    {/* Profile dropdown */}
-                    <Menu as="div" className="ml-3 relative">
-                      <div>
-                        <Menu.Button className="max-w-xs flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                          <div className="flex items-center">
-                            <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold">
-                              {user.name ? user.name.charAt(0).toUpperCase() : "U"}
-                            </div>
-                            <span className="ml-2 text-sm font-medium text-gray-700 hidden lg:inline-flex items-center">
-                              {user.name || "User"} <FaChevronDown className="ml-1 text-xs" />
-                            </span>
-                          </div>
-                        </Menu.Button>
-                      </div>
+                    <button className="p-2 text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400">
+                      <FaBell className="h-5 w-5" />
+                    </button>
+                    {/* User Menu */}
+                    <Menu as="div" className="relative">
+                      <Menu.Button className="flex items-center space-x-2 p-2 text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400">
+                        <FaUser className="h-5 w-5" />
+                        <span>{user.name || 'User'}</span>
+                        <FaChevronDown className="h-4 w-4" />
+                      </Menu.Button>
                       <Transition
                         enter="transition ease-out duration-100"
                         enterFrom="transform opacity-0 scale-95"
@@ -105,72 +77,59 @@ const Navbar = () => {
                         leaveFrom="transform opacity-100 scale-100"
                         leaveTo="transform opacity-0 scale-95"
                       >
-                        <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
-                          {role === "job_seeker" && (
-                            <Menu.Item>
-                              {({ active }) => (
-                                <Link
-                                  to="/job-seeker"
-                                  className={`${active ? 'bg-gray-100' : ''} block px-4 py-2 text-sm text-gray-700`}
-                                >
-                                  <FaUser className="inline mr-2" /> My Profile
-                                </Link>
-                              )}
-                            </Menu.Item>
-                          )}
-                          {role === "employer" && (
-                            <Menu.Item>
-                              {({ active }) => (
-                                <Link
-                                  to="/employer"
-                                  className={`${active ? 'bg-gray-100' : ''} block px-4 py-2 text-sm text-gray-700`}
-                                >
-                                  <FaBriefcase className="inline mr-2" /> Employer Dashboard
-                                </Link>
-                              )}
-                            </Menu.Item>
-                          )}
-                          {role === "admin" && (
-                            <Menu.Item>
-                              {({ active }) => (
-                                <Link
-                                  to="/admin"
-                                  className={`${active ? 'bg-gray-100' : ''} block px-4 py-2 text-sm text-gray-700`}
-                                >
-                                  Admin Dashboard
-                                </Link>
-                              )}
-                            </Menu.Item>
-                          )}
+                        <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md shadow-lg">
+                          <Menu.Item>
+                            {({ active }) => (
+                              <Link
+                                to={role === 'admin' ? '/admin' : role === 'job_seeker' ? '/job-seeker' : '/employer'}
+                                className={`${
+                                  active ? 'bg-gray-100 dark:bg-gray-600' : ''
+                                } flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200`}
+                              >
+                                <FaBriefcase className="mr-2 h-4 w-4" />
+                                Dashboard
+                              </Link>
+                            )}
+                          </Menu.Item>
                           <Menu.Item>
                             {({ active }) => (
                               <button
                                 onClick={handleLogout}
-                                className={`${active ? 'bg-gray-100' : ''} w-full text-left px-4 py-2 text-sm text-gray-700`}
+                                className={`${
+                                  active ? 'bg-gray-100 dark:bg-gray-600' : ''
+                                } flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200`}
                               >
-                                <FaSignOutAlt className="inline mr-2" /> Sign out
+                                <FaSignOutAlt className="mr-2 h-4 w-4" />
+                                Logout
                               </button>
                             )}
                           </Menu.Item>
                         </Menu.Items>
                       </Transition>
                     </Menu>
-                  </div>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      className="text-gray-900 dark:text-gray-100 hover:text-indigo-600 dark:hover:text-indigo-400 px-3 py-2 rounded-md text-sm font-medium"
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      to="/register"
+                      className="bg-indigo-600 text-white hover:bg-indigo-700 px-3 py-2 rounded-md text-sm font-medium"
+                    >
+                      Register
+                    </Link>
+                  </>
                 )}
-              </div>
-
-              {/* Mobile menu button */}
-              <div className="-mr-2 flex items-center md:hidden">
-                <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100 focus:outline-none transition-colors">
-                  <span className="sr-only">Open main menu</span>
+                {/* Mobile menu button */}
+                <Disclosure.Button className="sm:hidden p-2 text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400">
                   {open ? (
-                    <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    <span className="text-2xl">×</span>
                   ) : (
-                    <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
+                    <span className="text-2xl">☰</span>
                   )}
                 </Disclosure.Button>
               </div>
@@ -178,105 +137,37 @@ const Navbar = () => {
           </div>
 
           {/* Mobile menu */}
-          <Disclosure.Panel as={motion.div} 
-            className="md:hidden shadow-lg"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ 
-              opacity: open ? 1 : 0,
-              height: open ? "auto" : 0
-            }}
-            transition={{ duration: 0.2 }}
-          >
-            <div className="pt-2 pb-3 space-y-1 bg-white">
-              <Disclosure.Button
-                as={Link}
-                to="/jobs"
-                className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 hover:border-blue-500 transition-colors"
-              >
-                Browse Jobs
-              </Disclosure.Button>
-              <Disclosure.Button
-                as={Link}
-                to="/companies"
-                className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 hover:border-blue-500 transition-colors"
-              >
-                Companies
-              </Disclosure.Button>
-              <Disclosure.Button
-                as={Link}
-                to="/career-resources"
-                className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 hover:border-blue-500 transition-colors"
-              >
-                Career Resources
-              </Disclosure.Button>
-
-              {!isAuthenticated ? (
-                <div className="pt-4 pb-3 border-t border-gray-200 px-4 space-y-2">
+          <Disclosure.Panel className="sm:hidden">
+            <div className="pt-2 pb-3 space-y-1">
+              {navLinks.map((item) =>
+                item.show ? (
+                  <Disclosure.Button
+                    key={item.name}
+                    as={Link}
+                    to={item.href}
+                    className="block pl-3 pr-4 py-2 text-base font-medium text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    {item.name}
+                  </Disclosure.Button>
+                ) : null
+              )}
+              {!isAuthenticated && (
+                <>
                   <Disclosure.Button
                     as={Link}
                     to="/login"
-                    className="block w-full px-4 py-2 text-center text-base font-medium text-blue-600 hover:text-blue-800"
+                    className="block pl-3 pr-4 py-2 text-base font-medium text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
-                    Sign In
+                    Login
                   </Disclosure.Button>
                   <Disclosure.Button
                     as={Link}
                     to="/register"
-                    className="block w-full px-4 py-2 text-center text-base font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-md shadow hover:from-blue-700 hover:to-indigo-700"
+                    className="block pl-3 pr-4 py-2 text-base font-medium text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     Register
                   </Disclosure.Button>
-                </div>
-              ) : (
-                <div className="pt-4 pb-3 border-t border-gray-200">
-                  <div className="flex items-center px-5">
-                    <div className="flex-shrink-0">
-                      <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold">
-                        {user.name ? user.name.charAt(0).toUpperCase() : "U"}
-                      </div>
-                    </div>
-                    <div className="ml-3">
-                      <div className="text-base font-medium text-gray-800">{user.name || "User"}</div>
-                      <div className="text-sm font-medium text-gray-500 capitalize">{role?.replace('_', ' ')}</div>
-                    </div>
-                  </div>
-                  <div className="mt-3 px-2 space-y-1">
-                    {role === "job_seeker" && (
-                      <Disclosure.Button
-                        as={Link}
-                        to="/job-seeker"
-                        className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
-                      >
-                        My Profile
-                      </Disclosure.Button>
-                    )}
-                    {role === "employer" && (
-                      <Disclosure.Button
-                        as={Link}
-                        to="/employer"
-                        className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
-                      >
-                        Employer Dashboard
-                      </Disclosure.Button>
-                    )}
-                    {role === "admin" && (
-                      <Disclosure.Button
-                        as={Link}
-                        to="/admin"
-                        className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
-                      >
-                        Admin Dashboard
-                      </Disclosure.Button>
-                    )}
-                    <Disclosure.Button
-                      as="button"
-                      onClick={handleLogout}
-                      className="block w-full px-3 py-2 text-left text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
-                    >
-                      Sign Out
-                    </Disclosure.Button>
-                  </div>
-                </div>
+                </>
               )}
             </div>
           </Disclosure.Panel>
@@ -284,6 +175,4 @@ const Navbar = () => {
       )}
     </Disclosure>
   );
-};
-
-export default Navbar;
+}

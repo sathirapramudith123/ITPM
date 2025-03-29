@@ -1,19 +1,20 @@
-/** @type {import('tailwindcss').Config} */
+// tailwind.config.js
 module.exports = {
+  darkMode: 'class',
   content: [
-    "./src/**/*.{jsx,js,ts,tsx}", // Scan all source files for Tailwind classes
+    './src/**/*.{js,jsx,ts,tsx}',
   ],
   theme: {
     extend: {
       colors: {
-        primary: "var(--primary)", // #1D4ED8
-        secondary: "var(--secondary)", // #10B981
-        accent: "var(--accent)", // #F59E0B
-        neutral: "var(--neutral)", // #1F2937
-        background: "var(--background)", // #F9FAFB
-      },
-      fontFamily: {
-        sans: ["ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
+        primary: {
+          DEFAULT: '#1D4ED8',
+          hover: '#1E40AF',
+        },
+        secondary: {
+          DEFAULT: '#10B981',
+          hover: '#059669',
+        },
       },
     },
   },

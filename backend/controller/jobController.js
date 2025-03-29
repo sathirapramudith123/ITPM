@@ -3,42 +3,24 @@ import Category from "../models/categoryModels.js";
 import { validationResult } from "express-validator";
 import { notifyEmployer, notifyJobSeekers } from "./notificationController.js";
 
+// Create a new job posting
 export const createJob = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   try {
     const { title, description, salary, location, category, jobType, requirements, deadline } = req.body;
     const categoryExists = await Category.findById(category);
-    if (!categoryExists) {
-      return res.status(400).json({ message: "Invalid category" });
-    }
+    if (!categoryExists) return res.status(400).json({ message: "Invalid category" });
 
     const job = new Job({
-      title,
-      description,
-      salary,
-      location,
-      category,
-      jobType,
-      requirements,
-      deadline,
+      title, description, salary, location, category, jobType, requirements, deadline,
       employer: req.user._id,
     });
     await job.save();
-
-    if (job.status === "approved") {
-      await notifyJobSeekers(job._id);
-    }
-
     res.status(201).json(job);
   } catch (error) {
-    res.status(500).json({ message: "Error creating job", error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
-
+// Get all approved jobs with optional filters
 export const getJobs = async (req, res) => {
   try {
     const { title, location, salary, jobType, category } = req.query;
@@ -59,6 +41,7 @@ export const getJobs = async (req, res) => {
   }
 };
 
+// Get a specific job by ID
 export const getJobById = async (req, res) => {
   try {
     const job = await Job.findById(req.params.id)
@@ -77,6 +60,7 @@ export const getJobById = async (req, res) => {
   }
 };
 
+// Update an existing job
 export const updateJob = async (req, res) => {
   try {
     const job = await Job.findById(req.params.id);
@@ -94,6 +78,7 @@ export const updateJob = async (req, res) => {
   }
 };
 
+// Delete a job
 export const deleteJob = async (req, res) => {
   try {
     const job = await Job.findById(req.params.id);
@@ -108,6 +93,7 @@ export const deleteJob = async (req, res) => {
   }
 };
 
+// Get all jobs posted by the authenticated employer
 export const getEmployerJobs = async (req, res) => {
   try {
     const jobs = await Job.find({ employer: req.user._id }).populate("category", "name");
@@ -117,6 +103,7 @@ export const getEmployerJobs = async (req, res) => {
   }
 };
 
+// Apply for a job
 export const applyForJob = async (req, res) => {
   try {
     const job = await Job.findById(req.params.id);
@@ -136,5 +123,15 @@ export const applyForJob = async (req, res) => {
     res.json({ message: "Application submitted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error applying for job", error: error.message });
+  }
+};
+
+// Get all categories for job posting (new function)
+export const getCategories = async (req, res) => {
+  try {
+    const categories = await Category.find().select("name description");
+    res.json(categories);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };

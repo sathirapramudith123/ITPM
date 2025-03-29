@@ -1,21 +1,14 @@
 import express from "express";
-import {
-  manageJobPostings,
-  manageUserRoles,
-  manageCategories,
-  getAllJobs,
-  getAllUsers,
-  deleteUser,
-} from "../controller/adminController.js";
-import { authenticateUser, authenticateAdmin } from "../middleware/authMiddleware.js";
+import { manageJobPostings, manageUserRoles, manageCategories, getAllJobs, getAllUsers, deleteUser } from "../controller/adminController.js";
+import { authenticateAdmin } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/jobs", authenticateUser, authenticateAdmin, manageJobPostings);
-router.post("/users/roles", authenticateUser, authenticateAdmin, manageUserRoles);
-router.post("/categories", authenticateUser, authenticateAdmin, manageCategories);
-router.get("/jobs", authenticateUser, authenticateAdmin, getAllJobs); // New
-router.get("/users", authenticateUser, authenticateAdmin, getAllUsers); // New
-router.delete("/users/:userId", authenticateUser, authenticateAdmin, deleteUser); // New
+router.post("/jobs/manage", authenticateAdmin, manageJobPostings);
+router.post("/users/roles", authenticateAdmin, manageUserRoles);
+router.post("/categories", authenticateAdmin, manageCategories);
+router.get("/jobs", authenticateAdmin, getAllJobs);
+router.get("/users", authenticateAdmin, getAllUsers);
+router.delete("/users/:userId", authenticateAdmin, deleteUser);
 
 export default router;
