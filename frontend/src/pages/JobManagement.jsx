@@ -40,7 +40,7 @@ const JobManagement = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const res = await axios.get("/admin/jobs", { 
+        const res = await axios.get("/job/jobs/manage/admin/jobs", { 
           params: { 
             status: statusFilter,
             search: searchQuery 

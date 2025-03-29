@@ -26,7 +26,7 @@ const JobDetail = () => {
 
   const handleApply = async () => {
     try {
-      await axios.post(`/job/${id}/apply`);
+      await axios.post(`/job/jobs/:id/${id}/apply`);
       alert("Application submitted successfully!");
     } catch (err) {
       alert(err.response?.data?.message || "Failed to apply");
