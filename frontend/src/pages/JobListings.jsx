@@ -15,7 +15,7 @@ const JobListings = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const res = await axios.get("/job");
+        const res = await axios.get("/job/employer/jobs");
         setJobs(res.data);
       } catch (err) {
         console.error(err);
