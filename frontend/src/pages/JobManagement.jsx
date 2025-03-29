@@ -40,15 +40,18 @@ const JobManagement = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const res = await axios.get("/job/jobs/manage/admin/jobs", { 
+        const res = await axios.get("/job/jobs/admin/jobs", { 
           params: { 
             status: statusFilter,
             search: searchQuery 
           } 
+        }).catch((error) => {
+          console.error("Error fetching jobs:", error);
+          throw error;
         });
         setJobs(res.data);
       } catch (err) {
-        console.error(err);
+        alert("An error occurred while fetching jobs. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -60,7 +63,7 @@ const JobManagement = () => {
 
   const handleAction = async (jobId, action) => {
     try {
-      await axios.post("/admin/jobs", { jobId, action });
+      await axios.post("job/jobs/:id/apply/admin/jobs", { jobId, action });
       setJobs(jobs.map((job) => 
         job._id === jobId ? { ...job, status: action === "approve" ? "approved" : "rejected" } : job
       ));
@@ -308,3 +311,10 @@ const JobManagement = () => {
 };
 
 export default JobManagement;
+
+
+
+
+
+
+
