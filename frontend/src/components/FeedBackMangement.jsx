@@ -12,7 +12,7 @@ const FeedbackManagement = () => {
   useEffect(() => {
     const fetchFeedback = async () => {
       try {
-        const res = await axios.get("/feedback/all");
+        const res = await axios.get("/feedbacks/all");
         setFeedbacks(res.data);
       } catch (err) {
         console.error(err);
@@ -25,7 +25,7 @@ const FeedbackManagement = () => {
 
   const handleStatusUpdate = async (feedbackId, status) => {
     try {
-      await axios.put(`/feedback/status/${feedbackId}`, { status });
+      await axios.put(`/feedback/status/:${feedbackId}`, { status });
       setFeedbacks(feedbacks.map((fb) => (fb._id === feedbackId ? { ...fb, status } : fb)));
     } catch (err) {
       console.error(err);

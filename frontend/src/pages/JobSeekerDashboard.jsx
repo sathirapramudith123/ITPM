@@ -13,8 +13,8 @@ const JobSeekerDashboard = () => {
     const fetchData = async () => {
       try {
         const [jobRes, resumeRes] = await Promise.all([
-          axios.get("/job"),
-          axios.get("/resume/my-resume"),
+          axios.get("/job/jobs"),
+          axios.get("job /resume/my-resume"),
         ]);
         setJobs(jobRes.data);
         setResume(resumeRes.data);

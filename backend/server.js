@@ -29,7 +29,7 @@ app.use(
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/job", jobRoutes);
-app.use("/api/feedback", feedbackRoutes);
+app.use("/api/feedbacks", feedbackRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/resume", resumeRoutes);
