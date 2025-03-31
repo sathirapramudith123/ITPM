@@ -11,4 +11,4 @@ router.put('/categories/:id', auth, role(['admin']), updateCategory);
 router.delete('/categories/:id', auth, role(['admin']), deleteCategory);
 router.get('/analytics', auth, role(['admin']), getAnalytics);
 
-export default router;
+export default router;  

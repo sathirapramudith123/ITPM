@@ -29,32 +29,69 @@ function Profile() {
     }
   };
 
-  if (!user) return <div className="container mx-auto p-4">Please log in to view your profile.</div>;
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300">
+        <div className="p-6 bg-white rounded-lg shadow-lg text-center transform transition duration-500 hover:scale-105">
+          <h2 className="text-xl font-semibold text-gray-700">Please log in to view your profile.</h2>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Profile</h1>
-      <p>Email: {profile?.email}</p>
-      <p>Role: {profile?.role}</p>
-      <p>Name: {profile?.name || 'Not set'}</p>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-4 max-w-md">
-        <div>
-          <input
-            {...register('name', { required: 'Name is required' })}
-            placeholder="Name"
-            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+    <div className="min-h-screen bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-6">
+      <div className="bg-white max-w-lg w-full rounded-xl shadow-2xl p-8 transform transition-all duration-500 hover:shadow-3xl">
+        <h1 className="text-3xl font-extrabold text-center text-indigo-600 mb-6 animate-fade-in">
+          Your Profile
+        </h1>
+
+        {/* Profile Info */}
+        <div className="space-y-4 mb-8">
+          <div className="flex items-center space-x-3 bg-gray-50 p-3 rounded-lg shadow-sm">
+            <span className="text-indigo-500 font-medium">Email:</span>
+            <p className="text-gray-700">{profile?.email}</p>
+          </div>
+          <div className="flex items-center space-x-3 bg-gray-50 p-3 rounded-lg shadow-sm">
+            <span className="text-indigo-500 font-medium">Role:</span>
+            <p className="text-gray-700 capitalize">{profile?.role}</p>
+          </div>
+          <div className="flex items-center space-x-3 bg-gray-50 p-3 rounded-lg shadow-sm">
+            <span className="text-indigo-500 font-medium">Name:</span>
+            <p className="text-gray-700">{profile?.name || 'Not set'}</p>
+          </div>
         </div>
-        <div>
-          <input
-            type="file"
-            {...register('resume')}
-            className="w-full p-2 border rounded"
-          />
-        </div>
-        <button type="submit" className="bg-blue-500 text-white p-2 rounded w-full hover:bg-blue-600">Update Profile</button>
-      </form>
+
+        {/* Update Form */}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div className="relative">
+            <input
+              {...register('name', { required: 'Name is required' })}
+              placeholder="Update your name"
+              className="w-full p-4 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300"
+            />
+            {errors.name && (
+              <p className="text-red-500 text-sm mt-1 animate-slide-in">{errors.name.message}</p>
+            )}
+          </div>
+
+          <div className="relative">
+            <label className="block text-sm font-medium text-gray-600 mb-1">Upload Resume</label>
+            <input
+              type="file"
+              {...register('resume')}
+              className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition-all duration-300"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-300 transition-all duration-300 transform hover:-translate-y-1"
+          >
+            Update Profile
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
