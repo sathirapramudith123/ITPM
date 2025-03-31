@@ -3,11 +3,13 @@ import { Link } from 'react-router-dom';
 
 function JobCard({ job }) {
   return (
-    <div className="border p-4 rounded-lg shadow-md">
-      <h3 className="text-lg font-bold">{job.title}</h3>
-      <p>{job.location} | {job.type}</p>
-      <p className="text-gray-600">${job.salary}</p>
-      <Link to={`/jobs/${job.id}`} className="text-blue-500 hover:underline">View Details</Link>
+    <div className="card h-100 shadow-sm">
+      <div className="card-body">
+        <h5 className="card-title fw-bold text-dark">{job.title}</h5>
+        <p className="card-text text-muted">{job.location} | {job.type}</p>
+        <p className="card-text text-success fw-medium">${job.salary}</p>
+        <Link to={`/jobs/${job.id}`} className="btn btn-primary">View Details</Link>
+      </div>
     </div>
   );
 }

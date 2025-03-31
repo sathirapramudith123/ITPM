@@ -30,14 +30,18 @@ function JobList() {
     }
   };
 
-  if (loading) return <div className="container mx-auto p-4">Loading...</div>;
+  if (loading) return <div className="container text-center py-5">Loading...</div>;
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Job Listings</h1>
+    <div className="container py-5 bg-light min-vh-100">
+      <h1 className="display-5 fw-bold text-center mb-5">Job Listings</h1>
       <FilterBar onFilter={handleFilter} />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        {jobs.map(job => <JobCard key={job._id} job={{ ...job, id: job._id }} />)}
+      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mt-4">
+        {jobs.map(job => (
+          <div key={job._id} className="col">
+            <JobCard job={{ ...job, id: job._id }} />
+          </div>
+        ))}
       </div>
     </div>
   );

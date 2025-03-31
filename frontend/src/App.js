@@ -10,16 +10,16 @@ import JobList from './pages/JobList';
 import JobDetail from './pages/JobDetail';
 import Profile from './pages/Profile';
 import EmployerDashboard from './pages/EmployerDashboard';
-import AdminDashboard from './pages/AdminDashboard'; // Ensure this line is correct
+import AdminDashboard from './pages/AdminDashboard';
 import Feedback from './pages/Feedback';
 
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="flex flex-col min-h-screen">
+        <div className="d-flex flex-column min-vh-100">
           <Navbar />
-          <main className="flex-grow">
+          <main className="flex-grow-1">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
