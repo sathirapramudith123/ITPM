@@ -1,50 +1,33 @@
-import express from "express";
-import cors from "cors";
-import cookieParser from "cookie-parser";
-import dotenv from "dotenv";
-import connectDB from "./DB/db.js";
-import authRoutes from "./routes/authRoutes.js";
-import jobRoutes from "./routes/jobRoutes.js";
-import feedbackRoutes from "./routes/feedbackRoutes.js";
-import analyticsRoutes from "./routes/analyticsRoutes.js";
-import adminRoutes from "./routes/adminRoutes.js";
-import resumeRoutes from "./routes/resumeRoutes.js";
-import notificationRoutes from "./routes/notificationRoutes.js";
+import express from 'express';
+import cors from 'cors';
+import session from './config/session.js';
+import connectDB from './config/db.js';
+import 'dotenv/config.js';
 
-dotenv.config();
+import authRoutes from './routes/authRoutes.js';
+import jobRoutes from './routes/jobRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
+import feedbackRoutes from './routes/feedbackRoutes.js';
 
 const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  })
-);
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(session);
+
+// Connect to MongoDB
+connectDB();
 
 // Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/job", jobRoutes);
-app.use("/api/feedbacks", feedbackRoutes);
-app.use("/api/analytics", analyticsRoutes);
-app.use("/api/admin", adminRoutes);
-app.use("/api/resume", resumeRoutes);
-app.use("/api/notifications", notificationRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/jobs', jobRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/feedback', feedbackRoutes);
 
-// Error handling
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: "Something went wrong!" });
-});
-
-// Start server
 const PORT = process.env.PORT || 5000;
-connectDB().then(() => {
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
