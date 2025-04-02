@@ -1,3 +1,4 @@
+// models/User.js
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
@@ -5,9 +6,18 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   role: { type: String, enum: ['job_seeker', 'employer', 'admin'], required: true },
   profile: {
-    name: String,
-    resume: String,
-  }
+    name: { type: String, default: '' },
+    resume: {
+      summary: { type: String, default: '' },
+      skills: { type: [String], default: [] },
+      phone: { type: String, default: '' },
+      education: [{
+        degree: { type: String, default: '' },
+        institution: { type: String, default: '' },
+        years: { type: String, default: '' },
+      }],
+    },
+  },
 }, { timestamps: true });
 
 export default mongoose.model('User', userSchema);

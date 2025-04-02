@@ -6,7 +6,8 @@ import role from '../middleware/role.js';
 const router = express.Router();
 
 router.post('/categories', auth, role(['admin']), createCategory);
-router.get('/categories', auth, role(['admin']), getCategories);
+//router.get('/categories', auth, role(['admin']), getCategories);
+router.get('/categories', auth, getCategories); 
 router.put('/categories/:id', auth, role(['admin']), updateCategory);
 router.delete('/categories/:id', auth, role(['admin']), deleteCategory);
 router.get('/analytics', auth, role(['admin']), getAnalytics);

@@ -14,6 +14,7 @@ import AdminDashboard from './pages/AdminDashboard.jsx';
 import Feedback from './pages/Feedback.jsx';
 import NotificationPage from './components/NotificationPage.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx'; 
+import Resume from './pages/Resume.jsx';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
               <Route path="/jobs" element={<JobList />} />
               <Route path="/jobs/:id" element={<JobDetail />} />
               <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+              <Route path="/resume" element={<Resume />} />
               <Route path="/employer-dashboard" element={<ProtectedRoute><EmployerDashboard /></ProtectedRoute>} />
               <Route path="/admin-dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
               <Route path="/feedback" element={<Feedback />} />
