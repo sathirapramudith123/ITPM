@@ -37,19 +37,20 @@ function JobDetail() {
     }
   };
 
-  if (loading) return <div className="container mx-auto p-4">Loading...</div>;
-  if (!job) return <div className="container mx-auto p-4">Job not found</div>;
+  if (loading) return <div className="container mx-auto p-4 text-center">Loading...</div>;
+  if (!job) return <div className="container mx-auto p-4 text-center">Job not found</div>;
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">{job.title}</h1>
-      <p className="text-gray-600">{job.location} | {job.type}</p>
-      <p className="text-gray-800">${job.salary}</p>
-      <p className="mt-4">{job.description}</p>
+      <h1 className="text-3xl font-bold mb-4">{job.title}</h1>
+      <p className="text-gray-600 text-lg mb-2">{job.location} | {job.type}</p>
+      <p className="text-xl font-semibold text-gray-800">${job.salary}</p>
+      <p className="mt-6 text-gray-700">{job.description}</p>
+      
       {user && user.role === 'job_seeker' && (
         <button
           onClick={handleApply}
-          className="mt-4 bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+          className="mt-6 bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-blue-600 transition-colors"
         >
           Apply Now
         </button>
