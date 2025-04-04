@@ -33,7 +33,7 @@ function App() {
               <Route path="/resume" element={<Resume />} />
               <Route path="/employer-dashboard" element={<ProtectedRoute><EmployerDashboard /></ProtectedRoute>} />
               <Route path="/admin-dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-              <Route path="/feedback" element={<Feedback />} />
+              <Route path="/feedback/:jobId" element={<Feedback />} />
               <Route path="/notifications" element={<ProtectedRoute><NotificationPage /></ProtectedRoute>} />
             </Routes>
           </main>
