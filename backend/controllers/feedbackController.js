@@ -3,60 +3,50 @@ import Feedback from '../models/Feedback.js';
 // Submit Feedback
 export const submitFeedback = async (req, res) => {
   try {
-    const { comment, rating, jobId } = req.body;
-    const userId = req.user._id; // Extracted from auth middleware
-
-    if (!comment || !rating || !jobId) {
-      return res.status(400).json({ message: 'All fields are required.' });
-    }
-
-    const feedback = new Feedback({ userId, comment, rating, jobId });
+    const feedback = new Feedback(req.body);
     await feedback.save();
-    res.status(201).json(feedback);
+    res.status(201).json({ message: 'Feedback submitted successfully', feedback });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to submit feedback', error: error.message });
+    res.status(500).json({ error: 'Failed to submit feedback' });
   }
 };
 
-// Get Feedback for a Specific Job
-export const getFeedbackByJob = async (req, res) => {
+// Fetch All Feedbacks (Admin only)
+export const fetchAllFeedbacks = async (req, res) => {
   try {
-    const { jobId } = req.params;
-    const feedback = await Feedback.find({ jobId }).populate('userId', 'email');
-    res.json(feedback);
+    const feedbacks = await Feedback.find();
+    res.status(200).json(feedbacks);
   } catch (error) {
-    res.status(500).json({ message: 'Failed to retrieve feedback', error: error.message });
+    res.status(500).json({ error: 'Failed to fetch feedbacks' });
+  }
+};
+
+// Fetch Feedbacks by Job ID
+export const fetchFeedbacksByJobId = async (req, res) => {
+  try {
+    const feedbacks = await Feedback.find({ jobId: req.params.jobId });
+    res.status(200).json(feedbacks);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch feedbacks for this job' });
   }
 };
 
 // Update Feedback
 export const updateFeedback = async (req, res) => {
   try {
-    const { id } = req.params;
-    const feedback = await Feedback.findByIdAndUpdate(id, req.body, { new: true });
-
-    if (!feedback) {
-      return res.status(404).json({ message: 'Feedback not found' });
-    }
-
-    res.json(feedback);
+    const updatedFeedback = await Feedback.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.status(200).json({ message: 'Feedback updated successfully', updatedFeedback });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to update feedback', error: error.message });
+    res.status(500).json({ error: 'Failed to update feedback' });
   }
 };
 
 // Delete Feedback
 export const deleteFeedback = async (req, res) => {
   try {
-    const { id } = req.params;
-    const feedback = await Feedback.findByIdAndDelete(id);
-
-    if (!feedback) {
-      return res.status(404).json({ message: 'Feedback not found' });
-    }
-
-    res.json({ message: 'Feedback deleted successfully' });
+    await Feedback.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: 'Feedback deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Failed to delete feedback', error: error.message });
+    res.status(500).json({ error: 'Failed to delete feedback' });
   }
 };

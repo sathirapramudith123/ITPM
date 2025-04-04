@@ -13,22 +13,48 @@ function Profile() {
     education: [],
   });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Fetch resume on mount
   useEffect(() => {
     const fetchResume = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/resume');
+        if (!user || !user.token) {
+          throw new Error('User is not logged in or token is missing');
+        }
+
+        const response = await axios.get('http://localhost:5000/api/profile/resume', {
+          headers: {
+            Authorization: `Bearer ${user.token}`, // Include token for authorization
+          },
+        });
+
         const resume = response.data || { summary: '', skills: [], phone: '', education: [] };
         setFormData(resume);
       } catch (error) {
         console.error('Error fetching resume:', error);
+        if (error.response) {
+          // Server responded with an error
+          setError(`Server error: ${error.response.status} - ${error.response.data.message}`);
+        } else if (error.request) {
+          // No response received
+          setError('Network error: Could not connect to the server.');
+        } else {
+          // Other errors
+          setError(error.message || 'An error occurred while fetching resume.');
+        }
       } finally {
         setLoading(false);
       }
     };
-    if (user) fetchResume();
+
+    fetchResume();
   }, [user]);
+
+  // Error display component
+  const ErrorMessage = ({ message }) => (
+    <div className="text-red-500 text-sm mb-4">{message}</div>
+  );
 
   if (!user) {
     return (
@@ -52,6 +78,8 @@ function Profile() {
           <h1 className="mt-4 text-3xl font-extrabold text-indigo-600">{user.profile?.name || user.email.split('@')[0]}</h1>
           <p className="text-gray-600 mt-2">Role: {user.role}</p>
         </div>
+
+        {error && <ErrorMessage message={error} />}
 
         <section className="mb-8">
           <div className="flex justify-between items-center mb-4">

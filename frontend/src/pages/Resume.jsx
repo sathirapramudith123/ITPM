@@ -32,12 +32,13 @@ function ResumeForm() {
         setFormData(resume);
         setUser((prev) => ({ ...prev, profile: { ...prev.profile, resume } }));
       } catch (error) {
-        //console.error('Error fetching resume:', error);
+        console.error('Error fetching resume:', error);
         setError('Failed to load resume. Please try again.');
       } finally {
         setLoading(false);
       }
     };
+
     if (user) fetchResume();
   }, [user, setUser]);
 
@@ -84,13 +85,8 @@ function ResumeForm() {
       setUser((prev) => ({ ...prev, profile: { ...prev.profile, resume: response.data } }));
       navigate('/profile');
     } catch (error) {
-      console.error(hasExistingResume ? 'Error updating resume:' : 'Error creating resume:', {
-        message: error.message,
-        response: error.response ? error.response.data : 'No response data',
-        status: error.response ? error.response.status : 'No status',
-        config: error.config,
-      });
-      setError(hasExistingResume ? 'Failed to update resume.' : 'Failed to create resume.');
+      console.error('Error updating resume:', error);
+      setError('Failed to save resume. Please try again.');
     } finally {
       setActionLoading(false);
     }

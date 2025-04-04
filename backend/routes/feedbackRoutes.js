@@ -1,12 +1,21 @@
 import express from 'express';
-import { submitFeedback, getFeedbackByJob, updateFeedback, deleteFeedback } from '../controllers/feedbackController.js';
-import auth from '../middleware/auth.js';
+import { submitFeedback, fetchAllFeedbacks, fetchFeedbacksByJobId, updateFeedback, deleteFeedback } from '../controllers/feedbackController.js';
 
 const router = express.Router();
 
-router.post('/', auth, submitFeedback);
-router.get('/job/:jobId', auth, getFeedbackByJob);
-router.put('/:id', auth, updateFeedback);
-router.delete('/:id', auth, deleteFeedback);
+// POST: Submit feedback
+router.post('/', submitFeedback);
+
+// GET: Fetch all feedbacks (Admin only)
+router.get('/', fetchAllFeedbacks);
+
+// GET: Fetch feedbacks by Job ID
+router.get('/job/:jobId', fetchFeedbacksByJobId);
+
+// PUT: Update feedback by ID
+router.put('/:id', updateFeedback);
+
+// DELETE: Delete feedback by ID
+router.delete('/:id', deleteFeedback);
 
 export default router;
