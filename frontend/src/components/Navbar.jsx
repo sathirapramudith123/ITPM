@@ -12,6 +12,7 @@ import {
   FaTimes,
   FaUserShield,
   FaBell,
+  FaFileAlt, // Added for Resume icon
 } from 'react-icons/fa';
 
 function Navbar() {
@@ -55,6 +56,14 @@ function Navbar() {
             </Link>
             {user ? (
               <>
+                {user.role === 'job_seeker' && (
+                  <Link
+                    to="/resume"
+                    className="text-white hover:text-blue-100 transition-colors flex items-center"
+                  >
+                    <FaFileAlt className="mr-1" /> Resume
+                  </Link>
+                )}
                 {user.role === 'employer' && (
                   <Link
                     to="/employer-dashboard"
@@ -130,6 +139,15 @@ function Navbar() {
             </Link>
             {user ? (
               <>
+                {user.role === 'job_seeker' && (
+                  <Link
+                    to="/resume"
+                    className="text-white hover:bg-blue-700 px-3 py-2 rounded-md flex items-center"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <FaFileAlt className="mr-2" /> Resume
+                  </Link>
+                )}
                 {user.role === 'employer' && (
                   <Link
                     to="/employer-dashboard"

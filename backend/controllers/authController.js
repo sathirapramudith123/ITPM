@@ -2,12 +2,12 @@ import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 
 export const register = async (req, res) => {
-  const { email, password, role } = req.body;
+  const { username,email, password, role } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
-  const user = new User({ email, password: hashedPassword, role });
+  const user = new User({username, email, password: hashedPassword, role });
   await user.save();
   req.session.userId = user._id;
-  res.status(201).json({ message: 'User registered', user: { email, role } });
+  res.status(201).json({ message: 'User registered', user: {username, email, role } });
 };
 
 export const login = async (req, res) => {
@@ -26,5 +26,5 @@ export const logout = (req, res) => {
 };
 
 export const getCurrentUser = (req, res) => {
-  res.json({ user: { email: req.user.email, role: req.user.role } });
+  res.json({ user: { username: req.user.name, email: req.user.email, role: req.user.role } });
 };

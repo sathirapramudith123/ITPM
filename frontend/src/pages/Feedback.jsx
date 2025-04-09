@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { submitFeedback, fetchFeedbacksByJobId, updateFeedback, deleteFeedback } from '../services/feedbackService';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { AuthContext } from '../context/AuthContext'; // Make sure to import AuthContext
 
 function Feedback() {
   const { jobId } = useParams();
@@ -11,8 +12,8 @@ function Feedback() {
   const [rating, setRating] = useState(0);
   const [feedbacks, setFeedbacks] = useState([]);
   const [editId, setEditId] = useState(null);
+  const { user } = useContext(AuthContext); // Assuming AuthContext has user data
 
-  // Fetch feedbacks for the job
   useEffect(() => {
     const fetchFeedbacks = async () => {
       const data = await fetchFeedbacksByJobId(jobId);
@@ -23,21 +24,29 @@ function Feedback() {
 
   const onSubmit = async (data) => {
     try {
+      const feedbackPayload = {
+        ...data,
+        rating: rating,
+        jobId: jobId,
+        userId: user.id, // Use actual user ID from AuthContext
+      };
+
       if (editId) {
-        await updateFeedback(editId, { ...data, rating });
+        await updateFeedback(editId, feedbackPayload);
         alert('Feedback updated successfully!');
         setEditId(null);
       } else {
-        await submitFeedback({ ...data, rating, jobId });
+        await submitFeedback(feedbackPayload);
         alert('Feedback submitted successfully!');
       }
+
       reset();
       setRating(0);
       const updatedFeedbacks = await fetchFeedbacksByJobId(jobId);
       setFeedbacks(updatedFeedbacks);
     } catch (error) {
-      alert('Failed to submit/update feedback.');
-      console.error(error);
+      console.error("Feedback submission error:", error?.message || error);
+      alert('Error submitting feedback. Please try again.');
     }
   };
 
@@ -51,7 +60,7 @@ function Feedback() {
     try {
       await deleteFeedback(id);
       alert('Feedback deleted successfully!');
-      setFeedbacks(feedbacks.filter(feedback => feedback._id !== id));
+      setFeedbacks(feedbacks.filter(fb => fb._id !== id));
     } catch (error) {
       alert('Failed to delete feedback.');
       console.error(error);
@@ -65,34 +74,32 @@ function Feedback() {
     }
 
     const doc = new jsPDF();
-    doc.text('Feedback Report', 14, 10); // Title at the top
+    doc.text('Feedback Report', 14, 10);
 
-    // Add a table with feedback data
     doc.autoTable({
-      head: [['Comment', 'Rating', 'Created At']], // Table headers
+      head: [['Comment', 'Rating', 'Created At']],
       body: feedbacks.map(fb => [
-        fb.comment || 'No comment', // Comment column
-        fb.rating || 'N/A',         // Rating column
-        fb.createdAt ? new Date(fb.createdAt).toLocaleString() : 'Unknown Date', // Created At column
+        fb.comment || 'No comment',
+        fb.rating || 'N/A',
+        fb.createdAt ? new Date(fb.createdAt).toLocaleString() : 'Unknown Date',
       ]),
       headStyles: {
-        fillColor: [22, 160, 133],  // Green header color
-        textColor: 255,             // White text
+        fillColor: [22, 160, 133],
+        textColor: 255,
         fontSize: 12,
         halign: 'center',
       },
       bodyStyles: {
-        fillColor: [236, 240, 241], // Light gray background for rows
+        fillColor: [236, 240, 241],
         fontSize: 10,
         halign: 'left',
       },
       alternateRowStyles: {
-        fillColor: [255, 255, 255], // Alternate row color (white)
+        fillColor: [255, 255, 255],
       },
-      margin: { top: 20 },  // Top margin
+      margin: { top: 20 },
     });
 
-    // Save the generated PDF
     doc.save('feedback_report.pdf');
   };
 
@@ -104,9 +111,9 @@ function Feedback() {
           placeholder="Your feedback"
           className="w-full p-2 mb-2 border rounded"
         />
-        {errors.comment && <p>{errors.comment.message}</p>}
+        {errors.comment && <p className="text-red-500">{errors.comment.message}</p>}
 
-        <div>
+        <div className="flex items-center space-x-2 mb-2">
           <label>Rating:</label>
           {[...Array(5)].map((_, index) => (
             <button

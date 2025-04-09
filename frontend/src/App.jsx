@@ -1,3 +1,4 @@
+// src/App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
@@ -13,8 +14,8 @@ import EmployerDashboard from './pages/EmployerDashboard.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
 import Feedback from './pages/Feedback.jsx';
 import NotificationPage from './components/NotificationPage.jsx';
-import ProtectedRoute from './components/ProtectedRoute.jsx'; 
-import Resume from './pages/Resume.jsx';
+import ResumePage from './pages/ResumePage.jsx'; // Added ResumePage import
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 
 function App() {
   return (
@@ -29,12 +30,29 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/jobs" element={<JobList />} />
               <Route path="/jobs/:id" element={<JobDetail />} />
-              <Route path="/profile/ resume" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-              <Route path="/resume" element={<Resume />} />
-              <Route path="/employer-dashboard" element={<ProtectedRoute><EmployerDashboard /></ProtectedRoute>} />
-              <Route path="/admin-dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+              <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+              <Route
+                path="/resume"
+                element={<ProtectedRoute><ResumePage /></ProtectedRoute>}
+              /> {/* Added Resume route */}
+              <Route
+                path="/employer-dashboard"
+                element={<ProtectedRoute><EmployerDashboard /></ProtectedRoute>}
+              />
+              <Route
+                path="/admin-dashboard"
+                element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>}
+              />
               <Route path="/feedback/:jobId" element={<Feedback />} />
-              <Route path="/notifications" element={<ProtectedRoute><NotificationPage /></ProtectedRoute>} />
+              <Route
+                path="/notifications"
+                element={<ProtectedRoute><NotificationPage /></ProtectedRoute>}
+              />
+              {/* Optional 404 route */}
+              <Route
+                path="*"
+                element={<div className="text-center py-10 text-gray-700">404 - Page Not Found</div>}
+              />
             </Routes>
           </main>
           <Footer />

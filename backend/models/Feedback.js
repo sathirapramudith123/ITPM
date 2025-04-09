@@ -1,26 +1,10 @@
 import mongoose from 'mongoose';
 
 const feedbackSchema = new mongoose.Schema({
-  userId: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User', 
-    required: true 
-  },
-  jobId: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Job', 
-    required: true 
-  },
-  comment: { 
-    type: String, 
-    required: true 
-  },
-  rating: { 
-    type: Number, 
-    required: true, 
-    min: 1, 
-    max: 5 
-  }
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  jobId: { type: mongoose.Schema.Types.ObjectId, ref: 'Job'},
+  comment: { type: String, required: true },
+  rating: { type: Number, required: true, min: 1, max: 5 }
 }, { timestamps: true });
 
 export default mongoose.model('Feedback', feedbackSchema);

@@ -1,6 +1,5 @@
 import Feedback from '../models/Feedback.js';
 
-// Submit Feedback
 export const submitFeedback = async (req, res) => {
   try {
     const feedback = new Feedback(req.body);
@@ -11,7 +10,6 @@ export const submitFeedback = async (req, res) => {
   }
 };
 
-// Fetch All Feedbacks (Admin only)
 export const fetchAllFeedbacks = async (req, res) => {
   try {
     const feedbacks = await Feedback.find();
@@ -21,7 +19,6 @@ export const fetchAllFeedbacks = async (req, res) => {
   }
 };
 
-// Fetch Feedbacks by Job ID
 export const fetchFeedbacksByJobId = async (req, res) => {
   try {
     const feedbacks = await Feedback.find({ jobId: req.params.jobId });
@@ -31,7 +28,6 @@ export const fetchFeedbacksByJobId = async (req, res) => {
   }
 };
 
-// Update Feedback
 export const updateFeedback = async (req, res) => {
   try {
     const updatedFeedback = await Feedback.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -41,7 +37,6 @@ export const updateFeedback = async (req, res) => {
   }
 };
 
-// Delete Feedback
 export const deleteFeedback = async (req, res) => {
   try {
     await Feedback.findByIdAndDelete(req.params.id);
