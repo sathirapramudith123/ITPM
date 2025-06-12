@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
-const JobVacancyManager = () => {
-  const [jobs, setJobs] = useState([]);
+const JobVacancyManager = ({ jobs, setJobs }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -45,7 +44,9 @@ const JobVacancyManager = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-md mt-10">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">{editIndex !== null ? 'Edit Job' : 'Post New Job'}</h2>
+      <h2 className="text-2xl font-bold text-gray-800 mb-6">
+        {editIndex !== null ? 'Edit Job' : 'Post New Job'}
+      </h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700">Job Title</label>
@@ -58,7 +59,6 @@ const JobVacancyManager = () => {
             required
           />
         </div>
-
         <div>
           <label className="block text-sm font-medium text-gray-700">Description</label>
           <textarea
@@ -70,7 +70,6 @@ const JobVacancyManager = () => {
             required
           ></textarea>
         </div>
-
         <div>
           <label className="block text-sm font-medium text-gray-700">Category</label>
           <input
@@ -82,7 +81,6 @@ const JobVacancyManager = () => {
             required
           />
         </div>
-
         <div>
           <label className="block text-sm font-medium text-gray-700">Company Profile</label>
           <input
@@ -94,7 +92,6 @@ const JobVacancyManager = () => {
             required
           />
         </div>
-
         <div>
           <label className="block text-sm font-medium text-gray-700">Job Type</label>
           <select
@@ -111,7 +108,6 @@ const JobVacancyManager = () => {
             <option value="Remote">Remote</option>
           </select>
         </div>
-
         <div className="text-right">
           <button
             type="submit"
