@@ -5,6 +5,7 @@ import LoginForm from './pages/LoginFrom'
 import ResumeProfile from './pages/ResumeProfile'
 import JobVacancyManager from './pages/JobPost'
 import CompanyManager from './pages/Company'
+import PlatformUsageDashboard from './pages/AdminAnalyses'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -15,7 +16,8 @@ function App() {
       {/*<LoginForm/>*/}
       {/* <ResumeProfile/> */}
       {/*<JobVacancyManager/>*/}
-      <CompanyManager/>
+      {/* <CompanyManager/> */}
+      <PlatformUsageDashboard/>
     </>
   )
 }
