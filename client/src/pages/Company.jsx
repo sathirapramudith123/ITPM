@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
-const CompanyManager = () => {
-  const [companies, setCompanies] = useState([]);
+const CompanyManager = ({ companies, setCompanies }) => {
   const [formData, setFormData] = useState({
     name: '',
     industry: '',
@@ -12,15 +11,8 @@ const CompanyManager = () => {
   const [editIndex, setEditIndex] = useState(null);
 
   const industryOptions = [
-    'Technology',
-    'Healthcare',
-    'Finance',
-    'Education',
-    'Retail',
-    'Manufacturing',
-    'Construction',
-    'Transportation',
-    'Hospitality'
+    'Technology', 'Healthcare', 'Finance', 'Education',
+    'Retail', 'Manufacturing', 'Construction', 'Transportation', 'Hospitality'
   ];
 
   const handleChange = (e) => {
@@ -29,7 +21,6 @@ const CompanyManager = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (editIndex !== null) {
       const updated = [...companies];
       updated[editIndex] = formData;
@@ -38,14 +29,7 @@ const CompanyManager = () => {
     } else {
       setCompanies([...companies, formData]);
     }
-
-    setFormData({
-      name: '',
-      industry: '',
-      description: '',
-      location: '',
-      website: '',
-    });
+    setFormData({ name: '', industry: '', description: '', location: '', website: '' });
   };
 
   const handleEdit = (index) => {
@@ -62,7 +46,6 @@ const CompanyManager = () => {
       <h2 className="text-2xl font-bold text-gray-800 mb-6">
         {editIndex !== null ? 'Edit Company' : 'Add New Company'}
       </h2>
-
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700">Company Name</label>
@@ -75,7 +58,6 @@ const CompanyManager = () => {
             required
           />
         </div>
-
         <div>
           <label className="block text-sm font-medium text-gray-700">Industry</label>
           <select
@@ -91,7 +73,6 @@ const CompanyManager = () => {
             ))}
           </select>
         </div>
-
         <div>
           <label className="block text-sm font-medium text-gray-700">Description</label>
           <textarea
@@ -103,7 +84,6 @@ const CompanyManager = () => {
             required
           />
         </div>
-
         <div>
           <label className="block text-sm font-medium text-gray-700">Location</label>
           <input
@@ -115,7 +95,6 @@ const CompanyManager = () => {
             required
           />
         </div>
-
         <div>
           <label className="block text-sm font-medium text-gray-700">Website</label>
           <input
@@ -127,7 +106,6 @@ const CompanyManager = () => {
             required
           />
         </div>
-
         <div className="text-right">
           <button
             type="submit"

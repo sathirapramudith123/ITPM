@@ -10,10 +10,12 @@ import CompanyManager from './pages/Company';
 import PlatformUsageDashboard from './pages/AdminAnalyses';
 import JobFeedbackManager from './pages/feedback';
 import HomePage from './components/HomePage';
+import JobListView from './pages/JobListView';
 
 function App() {
   const [feedbacks, setFeedbacks] = useState([]);
   const [jobs, setJobs] = useState([]);
+  const [companies, setCompanies] = useState([]);
 
   return (
     <Router>
@@ -25,10 +27,11 @@ function App() {
             <Route path="/register" element={<RegisterForm />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/resume" element={<ResumeProfile />} />
-            <Route path="/jobs" element={<JobVacancyManager jobs={jobs} setJobs={setJobs} />} />
-            <Route path="/companies" element={<CompanyManager />} />
+            <Route path="/jobs" element={<JobVacancyManager jobs={jobs} setJobs={setJobs} companies={companies} />} />
+            <Route path="/companies" element={<CompanyManager companies={companies} setCompanies={setCompanies} />} />
             <Route path="/admin" element={<PlatformUsageDashboard />} />
             <Route path="/feedback" element={<JobFeedbackManager feedbacks={feedbacks} setFeedbacks={setFeedbacks} />} />
+            <Route path="/joblist" element={<JobListView jobs={jobs} companies={companies} />} />
           </Routes>
         </main>
         <Footer />

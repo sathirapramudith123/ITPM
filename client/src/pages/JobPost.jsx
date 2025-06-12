@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const JobVacancyManager = ({ jobs, setJobs }) => {
+const JobVacancyManager = ({ jobs, setJobs, companies }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -82,15 +82,21 @@ const JobVacancyManager = ({ jobs, setJobs }) => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Company Profile</label>
-          <input
-            type="text"
+          <label className="block text-sm font-medium text-gray-700">Company</label>
+          <select
             name="companyProfile"
             value={formData.companyProfile}
             onChange={handleChange}
             className="mt-1 block w-full border px-3 py-2 rounded-md shadow-sm"
             required
-          />
+          >
+            <option value="">Select a company</option>
+            {companies.map((company, idx) => (
+              <option key={idx} value={company.name}>
+                {company.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700">Job Type</label>
