@@ -13,7 +13,7 @@ const HomePage = ({ feedbacks, jobs }) => {
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-        <Link to="/jobs" className="p-6 bg-blue-100 rounded-xl hover:shadow-md">
+        <Link to="/joblist" className="p-6 bg-blue-100 rounded-xl hover:shadow-md">
           <h3 className="text-xl font-semibold mb-2">Find Jobs</h3>
           <p className="text-sm text-gray-600">Browse available job postings and apply now.</p>
         </Link>

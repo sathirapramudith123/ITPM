@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
+
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const handleChange = (e) => {
     setFormData({
@@ -13,19 +17,38 @@ const LoginForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Logging in with:', formData);
-    // Add API call here
+    setError('');
+    setSuccess('');
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/users/login', formData);
+
+      // Save token (optional, for auth)
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data));
+
+      setSuccess('Login successful!');
+      console.log('Logged in:', response.data);
+
+      // Redirect or update UI as needed
+    } catch (err) {
+      setError(err.response?.data?.message || 'Login failed');
+      console.error('Login error:', err);
+    }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen ">
+    <div className="flex justify-center items-center min-h-screen">
       <form 
         onSubmit={handleSubmit} 
         className="bg-white p-8 rounded-xl shadow-md w-full max-w-md"
       >
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Login</h2>
+
+        {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
+        {success && <p className="text-green-600 mb-4 text-center">{success}</p>}
 
         <div className="mb-4">
           <label className="block text-gray-700 mb-2">Email</label>
