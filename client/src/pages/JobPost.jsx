@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const JobVacancyManager = ({ jobs, setJobs, companies }) => {
+const API_URL = 'http://localhost:5000/api/jobs'; 
+
+const JobVacancyManager = ({ companies }) => {
+  const [jobs, setJobs] = useState([]);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -9,37 +13,86 @@ const JobVacancyManager = ({ jobs, setJobs, companies }) => {
     jobType: '',
   });
   const [editIndex, setEditIndex] = useState(null);
+  const [editJobId, setEditJobId] = useState(null);
 
+  // Fetch all jobs on component mount
+  useEffect(() => {
+    axios
+      .get(API_URL)
+      .then((res) => setJobs(res.data))
+      .catch((err) => console.error('Error fetching jobs:', err));
+  }, []);
+
+  // Handle form field changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Handle form submission for create or update
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (editIndex !== null) {
-      const updatedJobs = [...jobs];
-      updatedJobs[editIndex] = formData;
-      setJobs(updatedJobs);
-      setEditIndex(null);
+
+    if (editJobId) {
+      // Update existing job
+      axios
+        .put(`${API_URL}/${editJobId}`, formData)
+        .then((res) => {
+          const updatedJobs = jobs.map((job) =>
+            job._id === editJobId ? res.data : job
+          );
+          setJobs(updatedJobs);
+          setEditIndex(null);
+          setEditJobId(null);
+          setFormData({
+            title: '',
+            description: '',
+            category: '',
+            companyProfile: '',
+            jobType: '',
+          });
+        })
+        .catch((err) => console.error('Error updating job:', err));
     } else {
-      setJobs([...jobs, formData]);
+      // Create new job
+      axios
+        .post(API_URL, formData)
+        .then((res) => {
+          setJobs([...jobs, res.data]);
+          setFormData({
+            title: '',
+            description: '',
+            category: '',
+            companyProfile: '',
+            jobType: '',
+          });
+        })
+        .catch((err) => console.error('Error posting job:', err));
     }
-    setFormData({
-      title: '',
-      description: '',
-      category: '',
-      companyProfile: '',
-      jobType: '',
-    });
   };
 
+  // Populate form to edit selected job
   const handleEdit = (index) => {
-    setFormData(jobs[index]);
+    const job = jobs[index];
+    setFormData({
+      title: job.title,
+      description: job.description,
+      category: job.category,
+      companyProfile: job.companyProfile,
+      jobType: job.jobType,
+    });
     setEditIndex(index);
+    setEditJobId(job._id);
   };
 
+  // Delete job by id
   const handleDelete = (index) => {
-    setJobs(jobs.filter((_, i) => i !== index));
+    const jobId = jobs[index]._id;
+    axios
+      .delete(`${API_URL}/${jobId}`)
+      .then(() => {
+        setJobs(jobs.filter((_, i) => i !== index));
+      })
+      .catch((err) => console.error('Error deleting job:', err));
   };
 
   return (
@@ -49,7 +102,9 @@ const JobVacancyManager = ({ jobs, setJobs, companies }) => {
       </h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Job Title</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Job Title
+          </label>
           <input
             type="text"
             name="title"
@@ -60,7 +115,9 @@ const JobVacancyManager = ({ jobs, setJobs, companies }) => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Description</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Description
+          </label>
           <textarea
             name="description"
             value={formData.description}
@@ -71,7 +128,9 @@ const JobVacancyManager = ({ jobs, setJobs, companies }) => {
           ></textarea>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Category</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Category
+          </label>
           <input
             type="text"
             name="category"
@@ -82,7 +141,9 @@ const JobVacancyManager = ({ jobs, setJobs, companies }) => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Company</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Company
+          </label>
           <select
             name="companyProfile"
             value={formData.companyProfile}
@@ -99,7 +160,9 @@ const JobVacancyManager = ({ jobs, setJobs, companies }) => {
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Job Type</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Job Type
+          </label>
           <select
             name="jobType"
             value={formData.jobType}
@@ -131,11 +194,16 @@ const JobVacancyManager = ({ jobs, setJobs, companies }) => {
         ) : (
           <ul className="space-y-4">
             {jobs.map((job, index) => (
-              <li key={index} className="p-4 border rounded-md shadow-sm bg-gray-50">
+              <li
+                key={job._id}
+                className="p-4 border rounded-md shadow-sm bg-gray-50"
+              >
                 <h4 className="text-lg font-semibold">{job.title}</h4>
                 <p className="text-sm text-gray-700">{job.description}</p>
                 <p className="text-sm text-gray-500">Category: {job.category}</p>
-                <p className="text-sm text-gray-500">Company: {job.companyProfile}</p>
+                <p className="text-sm text-gray-500">
+                  Company: {job.companyProfile}
+                </p>
                 <p className="text-sm text-gray-500">Type: {job.jobType}</p>
                 <div className="mt-2 space-x-2">
                   <button
