@@ -5,7 +5,7 @@ import connectDB from './config/db.js';
 import userRoutes from './routes/userRoutes.js';
 import resumeRoutes from './routes/resumeRoutes.js';
 import companyRoutes from './routes/companyRoutes.js';
-import jobRoutes from './routes/jobResume.js';
+import jobRoutes from './routes/jobRoutes.js';
 
 dotenv.config();
 connectDB();

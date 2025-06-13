@@ -1,14 +1,41 @@
 import Job from '../models/jobs.js';
 
 // Get all jobs
+// Get all jobs or search by title/category
 export const getAllJobs = async (req, res) => {
   try {
-    const jobs = await Job.find().sort({ createdAt: -1 });
+    const { search } = req.query;
+    let query = {};
+
+    if (search) {
+      query = {
+        $or: [
+          { title: { $regex: search, $options: 'i' } },
+          { category: { $regex: search, $options: 'i' } },
+        ],
+      };
+    }
+
+    const jobs = await Job.find(query).sort({ createdAt: -1 });
     res.json(jobs);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+
+// Get a job by ID
+export const getJobById = async (req, res) => {
+  try {
+    const job = await Job.findById(req.params.id);
+    if (!job) return res.status(404).json({ error: 'Job not found' });
+    res.json(job);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 
 // Create a new job
 export const createJob = async (req, res) => {

@@ -12,18 +12,19 @@ const HomePage = ({ feedbacks, jobs }) => {
         A smarter way to connect job seekers and employers.
       </p>
 
+      {/* Navigation Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-        <Link to="/joblist" className="p-6 bg-blue-100 rounded-xl hover:shadow-md">
+        <Link to="/joblist" className="p-6 bg-blue-100 rounded-xl hover:shadow-md transition">
           <h3 className="text-xl font-semibold mb-2">Find Jobs</h3>
           <p className="text-sm text-gray-600">Browse available job postings and apply now.</p>
         </Link>
 
-        <Link to="/feedback" className="p-6 bg-green-100 rounded-xl hover:shadow-md">
+        <Link to="/feedback" className="p-6 bg-green-100 rounded-xl hover:shadow-md transition">
           <h3 className="text-xl font-semibold mb-2">Give Feedback</h3>
           <p className="text-sm text-gray-600">Share your job experiences through reviews and ratings.</p>
         </Link>
 
-        <Link to="/resume" className="p-6 bg-purple-100 rounded-xl hover:shadow-md">
+        <Link to="/resume" className="p-6 bg-purple-100 rounded-xl hover:shadow-md transition">
           <h3 className="text-xl font-semibold mb-2">Your Profile</h3>
           <p className="text-sm text-gray-600">Manage your resume, skills, and work history.</p>
         </Link>
@@ -62,12 +63,16 @@ const HomePage = ({ feedbacks, jobs }) => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {jobs.map((job, index) => (
-              <div key={index} className="bg-white p-4 rounded-lg shadow border">
+              <Link
+                to={`/jobs/${job._id}`}
+                key={index}
+                className="bg-white p-4 rounded-lg shadow border hover:shadow-md transition"
+              >
                 <h3 className="text-lg font-semibold text-blue-700">{job.title}</h3>
                 <p className="text-sm text-gray-600 mb-1">{job.description}</p>
                 <p className="text-sm text-gray-500">Company: {job.companyProfile}</p>
                 <p className="text-sm text-gray-500">Type: {job.jobType}</p>
-              </div>
+              </Link>
             ))}
           </div>
         )}
