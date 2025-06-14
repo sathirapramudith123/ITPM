@@ -1,37 +1,52 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  BarChart, Bar, PieChart, Pie, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+  BarChart, Bar, PieChart, Pie,
+  XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, Cell,
 } from 'recharts';
-
-const usageStats = {
-  jobSeekers: {
-    totalSignUps: 1200,
-    completedProfiles: 850,
-    avgJobsApplied: 5.2,
-  },
-  jobEmployers: {
-    totalEmployers: 200,
-    avgJobsPosted: 12,
-    avgViewsPerJob: 150,
-    avgApplicationsPerJob: 45,
-  },
-  weeklyActivity: [
-    { day: 'Mon', seekers: 300, employers: 50 },
-    { day: 'Tue', seekers: 350, employers: 60 },
-    { day: 'Wed', seekers: 400, employers: 65 },
-    { day: 'Thu', seekers: 370, employers: 58 },
-    { day: 'Fri', seekers: 390, employers: 62 },
-    { day: 'Sat', seekers: 200, employers: 30 },
-    { day: 'Sun', seekers: 180, employers: 25 },
-  ]
-};
+import axios from 'axios';
 
 const PlatformUsageDashboard = () => {
-  const profileCompletionRate = ((usageStats.jobSeekers.completedProfiles / usageStats.jobSeekers.totalSignUps) * 100).toFixed(1);
+  const [usageStats, setUsageStats] = useState({
+    jobSeekers: {
+      totalSignUps: 0,
+      completedProfiles: 850, // static or replace with backend data
+      avgJobsApplied: 5.2,     // static or replace with backend data
+    },
+    jobEmployers: {
+      totalEmployers: 0,
+      avgJobsPosted: 12,
+      avgViewsPerJob: 150,
+      avgApplicationsPerJob: 45,
+    }
+  });
 
-  const pieData = [
-    { name: 'Completed', value: usageStats.jobSeekers.completedProfiles },
-    { name: 'Incomplete', value: usageStats.jobSeekers.totalSignUps - usageStats.jobSeekers.completedProfiles }
+  // Fetch counts from backend
+  useEffect(() => {
+    const fetchUserCounts = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/api/users/counts');
+        setUsageStats(prev => ({
+          ...prev,
+          jobSeekers: {
+            ...prev.jobSeekers,
+            totalSignUps: res.data.jobSeekers,
+          },
+          jobEmployers: {
+            ...prev.jobEmployers,
+            totalEmployers: res.data.jobEmployers,
+          }
+        }));
+      } catch (error) {
+        console.error('Error fetching user counts:', error);
+      }
+    };
+
+    fetchUserCounts();
+  }, []);
+
+  const userTypePieData = [
+    { name: 'Job Seekers', value: usageStats.jobSeekers.totalSignUps },
+    { name: 'Job Employers', value: usageStats.jobEmployers.totalEmployers },
   ];
 
   return (
@@ -39,12 +54,22 @@ const PlatformUsageDashboard = () => {
       <h1 className="text-3xl font-bold mb-8 text-center">Platform Usage Dashboard</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Pie Chart for Profile Completion */}
+        {/* Pie Chart for User Type Distribution */}
         <div className="bg-white rounded-xl shadow p-4">
-          <h2 className="text-xl font-semibold mb-4 text-center">Job Seeker Profile Completion</h2>
+          <h2 className="text-xl font-semibold mb-4 text-center">User Type Distribution</h2>
           <ResponsiveContainer width="100%" height={250}>
             <PieChart>
-              <Pie dataKey="value" data={pieData} cx="50%" cy="50%" outerRadius={80} fill="#3182ce" label />
+              <Pie
+                dataKey="value"
+                data={userTypePieData}
+                cx="50%"
+                cy="50%"
+                outerRadius={80}
+                label
+              >
+                <Cell fill="#4299e1" /> {/* Job Seekers - Blue */}
+                <Cell fill="#48bb78" /> {/* Job Employers - Green */}
+              </Pie>
               <Tooltip />
               <Legend />
             </PieChart>
@@ -54,30 +79,16 @@ const PlatformUsageDashboard = () => {
         {/* Bar Chart for Employer Stats */}
         <div className="bg-white rounded-xl shadow p-4">
           <h2 className="text-xl font-semibold mb-4 text-center">Employer Job Statistics</h2>
-          <BarChart width={400} height={250} data={[usageStats.jobEmployers]}>
-            <XAxis dataKey="avgJobsPosted" hide />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="avgJobsPosted" fill="#48bb78" name="Avg Jobs Posted" />
-            <Bar dataKey="avgViewsPerJob" fill="#4299e1" name="Views per Job" />
-            <Bar dataKey="avgApplicationsPerJob" fill="#f6ad55" name="Applications per Job" />
-          </BarChart>
-        </div>
-
-        {/* Line Chart for Weekly Activity */}
-        <div className="col-span-1 md:col-span-2 bg-white rounded-xl shadow p-4">
-          <h2 className="text-xl font-semibold mb-4 text-center">Weekly Activity</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={usageStats.weeklyActivity}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="day" />
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart data={[usageStats.jobEmployers]}>
+              <XAxis dataKey="avgJobsPosted" hide />
               <YAxis />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="seekers" stroke="#63b3ed" name="Job Seekers" />
-              <Line type="monotone" dataKey="employers" stroke="#68d391" name="Job Employers" />
-            </LineChart>
+              <Bar dataKey="avgJobsPosted" fill="#48bb78" name="Avg Jobs Posted" />
+              <Bar dataKey="avgViewsPerJob" fill="#4299e1" name="Views per Job" />
+              <Bar dataKey="avgApplicationsPerJob" fill="#f6ad55" name="Applications per Job" />
+            </BarChart>
           </ResponsiveContainer>
         </div>
       </div>

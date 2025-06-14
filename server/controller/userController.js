@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import User from '../models/user.js'; // ensure correct import path
+import User from '../models/user.js';
 
 // Generate JWT Token
 const generateToken = (id, role) => {
@@ -15,19 +15,15 @@ export const registerUser = async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
 
-    // Validate input
     if (!username || !email || !password || !role) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
-    // Check if user already exists
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(400).json({ message: 'User already exists' });
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create user
     const user = await User.create({
       username,
       email,
@@ -35,7 +31,6 @@ export const registerUser = async (req, res) => {
       role,
     });
 
-    // Generate token
     const token = generateToken(user._id, user.role);
 
     res.status(201).json({
@@ -57,18 +52,15 @@ export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Validate input
     if (!email || !password) {
       return res.status(400).json({ message: 'Email and password required' });
     }
 
-    // Find user
     const user = await User.findOne({ email });
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    // Generate token
     const token = generateToken(user._id, user.role);
 
     res.json({
@@ -84,7 +76,7 @@ export const loginUser = async (req, res) => {
   }
 };
 
-// @desc Get all users (Admin only)
+// @desc Get all users
 // @route GET /api/users
 export const getAllUsers = async (req, res) => {
   try {
@@ -92,6 +84,23 @@ export const getAllUsers = async (req, res) => {
     res.json(users);
   } catch (error) {
     console.error('Get users error:', error.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// ✅ @desc Count Job Seekers and Job Employers
+// @route GET /api/users/counts
+export const getUserCounts = async (req, res) => {
+  try {
+    const jobSeekerCount = await User.countDocuments({ role: 'jobseeker' });
+    const jobEmployerCount = await User.countDocuments({ role: 'jobemployer' });
+
+    res.json({
+      jobSeekers: jobSeekerCount,
+      jobEmployers: jobEmployerCount,
+    });
+  } catch (error) {
+    console.error('Error counting users:', error.message);
     res.status(500).json({ message: 'Server error' });
   }
 };
