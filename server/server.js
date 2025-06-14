@@ -6,6 +6,7 @@ import userRoutes from './routes/userRoutes.js';
 import resumeRoutes from './routes/resumeRoutes.js';
 import companyRoutes from './routes/companyRoutes.js';
 import jobRoutes from './routes/jobRoutes.js';
+import feedbackRoutes from './routes/feedbackRoutes.js';
 
 dotenv.config();
 connectDB();
@@ -19,6 +20,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/resumes', resumeRoutes);
 app.use('/api/companies', companyRoutes);
 app.use('/api/jobs', jobRoutes);
+app.use('/api/feedback', feedbackRoutes);
 
 
 const PORT = process.env.PORT || 5000;
