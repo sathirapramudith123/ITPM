@@ -31,8 +31,8 @@ const Footer = () => {
           <div>
             <h4 className="text-white font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#" className="hover:text-white transition">Home</a></li>
-              <li><a href="#" className="hover:text-white transition">Browse Jobs</a></li>
+              <li><a href="/" className="hover:text-white transition">Home</a></li>
+              <li><a href="/joblist" className="hover:text-white transition">Browse Jobs</a></li>
               <li><a href="#" className="hover:text-white transition">Companies</a></li>
               <li><a href="#" className="hover:text-white transition">Career Resources</a></li>
             </ul>
@@ -70,9 +70,9 @@ const Footer = () => {
             © {currentYear} JobHub. All rights reserved.
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" className="text-sm hover:text-white transition">Privacy Policy</a>
-            <a href="#" className="text-sm hover:text-white transition">Terms of Service</a>
-            <a href="#" className="text-sm hover:text-white transition">Cookie Policy</a>
+            <a href="/privacy-policy" className="text-sm hover:text-white transition">Privacy Policy</a>
+            <a href="/terms-of-service" className="text-sm hover:text-white transition">Terms of Service</a>
+            <a href="/cookies" className="text-sm hover:text-white transition">Cookie Policy</a>
           </div>
         </div>
       </div>

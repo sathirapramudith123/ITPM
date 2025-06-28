@@ -11,6 +11,9 @@ import PlatformUsageDashboard from './pages/AdminAnalyses';
 import JobFeedbackManager from './pages/feedback';
 import HomePage from './components/HomePage';
 import JobListView from './pages/JobListView';
+import PrivacyPolicy from './condition/privacy&policy';
+import TermsOfService from './condition/TermsofService';
+import CookiePolicy from './condition/CookiePolicy';
 
 function App() {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -32,6 +35,9 @@ function App() {
             <Route path="/admin" element={<PlatformUsageDashboard />} />
             <Route path="/feedback" element={<JobFeedbackManager feedbacks={feedbacks} setFeedbacks={setFeedbacks} />} />
             <Route path="/joblist" element={<JobListView jobs={jobs} companies={companies} />} />
+            <Route path='/privacy-policy' element={<PrivacyPolicy />} />
+            <Route path='/terms-of-service' element={<TermsOfService />} />
+            <Route path='/cookies' element={<CookiePolicy />} />
           </Routes>
         </main>
         <Footer />
