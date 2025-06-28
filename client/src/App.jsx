@@ -14,6 +14,7 @@ import JobListView from './pages/JobListView';
 import PrivacyPolicy from './condition/privacy&policy';
 import TermsOfService from './condition/TermsofService';
 import CookiePolicy from './condition/CookiePolicy';
+import CompanyList from './pages/companylist';
 
 function App() {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -38,6 +39,7 @@ function App() {
             <Route path='/privacy-policy' element={<PrivacyPolicy />} />
             <Route path='/terms-of-service' element={<TermsOfService />} />
             <Route path='/cookies' element={<CookiePolicy />} />
+            <Route path='/companylist' element={<CompanyList />} />
           </Routes>
         </main>
         <Footer />
