@@ -5,6 +5,8 @@ const JobListView = ({ companies }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [jobs, setJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchJobs = async (term = '') => {
     setIsLoading(true);
@@ -33,6 +35,16 @@ const JobListView = ({ companies }) => {
   const getCompanyName = (companyId) => {
     const company = companies.find((c) => c.id === companyId);
     return company ? company.name : 'Unknown';
+  };
+
+  const handleViewDetails = (job) => {
+    setSelectedJob(job);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedJob(null);
   };
 
   return (
@@ -110,12 +122,121 @@ const JobListView = ({ companies }) => {
                 </div>
               </div>
               <div className="bg-gray-50 px-6 py-4">
-                <button className="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                <button 
+                  onClick={() => handleViewDetails(job)}
+                  className="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                >
                   View Details
                 </button>
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Job Details Modal */}
+      {isModalOpen && selectedJob && (
+        <div className="fixed z-10 inset-0 overflow-y-auto">
+          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+              <div className="absolute inset-0 bg-gray-500 opacity-75" onClick={closeModal}></div>
+            </div>
+            
+            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            
+            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div className="sm:flex sm:items-start">
+                  <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                    <div className="flex justify-between items-start">
+                      <h3 className="text-2xl leading-6 font-bold text-gray-900 mb-2">
+                        {selectedJob.title}
+                      </h3>
+                      <button
+                        onClick={closeModal}
+                        className="text-gray-400 hover:text-gray-500 focus:outline-none"
+                      >
+                        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                    
+                    <div className="flex items-center mt-2 mb-4">
+                      <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                        selectedJob.jobType === 'Full-time' ? 'bg-green-100 text-green-800' :
+                        selectedJob.jobType === 'Part-time' ? 'bg-blue-100 text-blue-800' :
+                        'bg-purple-100 text-purple-800'
+                      }`}>
+                        {selectedJob.jobType}
+                      </span>
+                      <span className="ml-2 px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">
+                        {selectedJob.category}
+                      </span>
+                    </div>
+                    
+                    <div className="flex items-center mb-6">
+                      <div className="flex-shrink-0">
+                        <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg">
+                          {getCompanyName(selectedJob.companyId).charAt(0)}
+                        </div>
+                      </div>
+                      <div className="ml-4">
+                        <p className="text-lg font-medium text-gray-900">
+                          {getCompanyName(selectedJob.companyId)}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          Posted on {new Date(selectedJob.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-4">
+                      <h4 className="text-lg font-semibold text-gray-900 mb-2">Job Description</h4>
+                      <p className="text-gray-700 whitespace-pre-line">{selectedJob.description}</p>
+                    </div>
+                    
+                    {selectedJob.requirements && (
+                      <div className="mt-4">
+                        <h4 className="text-lg font-semibold text-gray-900 mb-2">Requirements</h4>
+                        <ul className="list-disc pl-5 text-gray-700">
+                          {selectedJob.requirements.split('\n').map((req, index) => (
+                            <li key={index}>{req}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    
+                    <div className="mt-6 grid grid-cols-2 gap-4">
+                      <div>
+                        <h5 className="text-sm font-medium text-gray-500">Location</h5>
+                        <p className="text-gray-900">{selectedJob.location || 'Not specified'}</p>
+                      </div>
+                      <div>
+                        <h5 className="text-sm font-medium text-gray-500">Salary</h5>
+                        <p className="text-gray-900">{selectedJob.salary || 'Not specified'}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                <button
+                  type="button"
+                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                >
+                  Apply Now
+                </button>
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
