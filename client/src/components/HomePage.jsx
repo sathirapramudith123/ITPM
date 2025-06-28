@@ -8,7 +8,7 @@ const HomePage = ({ feedbacks, jobs }) => {
       {/* Hero Section */}
       <div className="text-center mb-16">
         <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-          Welcome to JobHub
+          Welcome to Career Pulse
         </h1>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
           Connecting talented professionals with their dream opportunities
