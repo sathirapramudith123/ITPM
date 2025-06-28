@@ -207,16 +207,7 @@ const JobListView = ({ companies }) => {
                       </div>
                     )}
                     
-                    <div className="mt-6 grid grid-cols-2 gap-4">
-                      <div>
-                        <h5 className="text-sm font-medium text-gray-500">Location</h5>
-                        <p className="text-gray-900">{selectedJob.location || 'Not specified'}</p>
-                      </div>
-                      <div>
-                        <h5 className="text-sm font-medium text-gray-500">Salary</h5>
-                        <p className="text-gray-900">{selectedJob.salary || 'Not specified'}</p>
-                      </div>
-                    </div>
+
                   </div>
                 </div>
               </div>
