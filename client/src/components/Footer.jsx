@@ -10,7 +10,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="space-y-4">
-            <h3 className="text-white font-bold text-lg">JobHub</h3>
+            <h3 className="text-white font-bold text-lg">Career Pulse</h3>
             <p className="text-sm">
               Connecting talented professionals with their dream jobs since 2020.
             </p>
@@ -55,8 +55,8 @@ const Footer = () => {
             <ul className="space-y-2 text-sm">
               <li className="flex items-center">
                 <FaEnvelope className="mr-2" />
-                <a href="mailto:contact@jobhub.com" className="hover:text-white transition">
-                  contact@jobhub.com
+                <a href="mailto:careerpulse@gmail.com" className="hover:text-white transition">
+                  careerpulse@gmail.com
                 </a>
               </li>
               <li>123 Job Street, Tech City</li>
