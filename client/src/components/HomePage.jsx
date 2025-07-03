@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaStar, FaSearch, FaCommentAlt, FaUser, FaBriefcase } from 'react-icons/fa';
+import { FaStar, FaSearch, FaCommentAlt, FaUser, FaBriefcase, FaArrowRight } from 'react-icons/fa';
 
 const HomePage = ({ feedbacks, jobs }) => {
   return (
@@ -10,63 +10,97 @@ const HomePage = ({ feedbacks, jobs }) => {
         <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
           Welcome to Career Pulse
         </h1>
-        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+        <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
           Connecting talented professionals with their dream opportunities
         </p>
+        <div className="flex gap-4 justify-center">
+          <Link 
+            to="/joblist" 
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors shadow-md"
+          >
+            Browse Jobs
+          </Link>
+          <Link 
+            to="/companylist" 
+            className="bg-white hover:bg-gray-50 text-blue-600 border border-blue-600 px-6 py-3 rounded-lg font-medium transition-colors shadow-sm"
+          >
+            Explore Companies
+          </Link>
+        </div>
       </div>
 
-      
+      {/* Features Section */}
+      <SectionWrapper title="How It Works">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <FeatureCard 
+            icon={<FaSearch className="text-blue-600" size={24} />}
+            title="Find Opportunities"
+            description="Discover jobs that match your skills and aspirations"
+            to="/joblist"
+            color="blue"
+          />
+          <FeatureCard 
+            icon={<FaCommentAlt className="text-purple-600" size={24} />}
+            title="Get Feedback"
+            description="Receive valuable insights from industry experts"
+            to="/feedback"
+            color="purple"
+          />
+        </div>
+      </SectionWrapper>
 
-      {/* Job Section */}
-      <SectionWrapper title="Latest Job Opportunities">
-        {jobs.length === 0 ? (
-          <EmptyState message="No job posts yet. Check back later!" />
-        ) : (
+      {/* Featured Jobs Section */}
+      <SectionWrapper title="Featured Opportunities">
+        {jobs && jobs.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {jobs.slice(0, 3).map((job) => (
+            {jobs.slice(0, 6).map(job => (
               <JobCard key={job._id} job={job} />
             ))}
           </div>
+        ) : (
+          <EmptyState message="No featured jobs available at the moment" />
         )}
-        {jobs.length > 0 && (
-          <div className="mt-8 text-center">
-            <Link 
-              to="/joblist" 
-              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors"
-            >
-              View All Jobs <span className="ml-2">→</span>
-            </Link>
+        <div className="text-center mt-8">
+          <Link 
+            to="/jobs" 
+            className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium"
+          >
+            View all job opportunities <FaArrowRight className="ml-2" />
+          </Link>
+        </div>
+      </SectionWrapper>
+
+      {/* Testimonials Section */}
+      <SectionWrapper title="Success Stories">
+        {feedbacks && feedbacks.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {feedbacks.slice(0, 3).map((feedback, index) => (
+              <FeedbackCard key={index} feedback={feedback} />
+            ))}
           </div>
+        ) : (
+          <EmptyState message="No testimonials available yet" />
         )}
       </SectionWrapper>
 
-      {/* Feedback Section */}
-      <SectionWrapper title="Community Feedback">
-        {feedbacks.length === 0 ? (
-          <EmptyState message="No feedback yet. Be the first to share!" />
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {feedbacks.slice(0, 3).map((fb, index) => (
-              <FeedbackCard key={index} feedback={fb} />
-            ))}
-          </div>
-        )}
-        {feedbacks.length > 0 && (
-          <div className="mt-8 text-center">
-            <Link 
-              to="/feedback" 
-              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 transition-colors"
-            >
-              See More Feedback <span className="ml-2">→</span>
-            </Link>
-          </div>
-        )}
-      </SectionWrapper>
+      {/* Call to Action */}
+      <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl p-8 md:p-12 text-center text-white mb-16">
+        <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to advance your career?</h2>
+        <p className="text-lg mb-6 max-w-2xl mx-auto opacity-90">
+          Join thousands of professionals who found their dream jobs through Career Pulse
+        </p>
+        <Link 
+          to="/register" 
+          className="inline-block bg-white text-blue-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-bold transition-colors shadow-lg"
+        >
+          Get Started Now
+        </Link>
+      </div>
     </div>
   );
 };
 
-// Reusable Components
+// Reusable Components (keep the same as in your original code)
 const SectionWrapper = ({ title, children }) => (
   <div className="mb-20">
     <h2 className="text-3xl font-bold text-center mb-12 relative">
