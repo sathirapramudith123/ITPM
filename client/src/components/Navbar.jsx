@@ -34,9 +34,10 @@ const Navbar = () => {
 
         {/* Links */}
         <div className={`md:flex ${menuOpen ? 'block' : 'hidden'} space-x-0 md:space-x-6 mt-4 md:mt-0`}>
+
           {user?.role === 'jobseeker' && (
             <>
-              <Link to="/jobs" className="block md:inline hover:underline">Find Jobs</Link>
+              <Link to="/joblist" className="block md:inline hover:underline">Find Jobs</Link>
               <Link to="/resume" className="block md:inline hover:underline">Resume</Link>
               <Link to="/profile" className="block md:inline hover:underline">My Profile</Link>
             </>
@@ -46,14 +47,14 @@ const Navbar = () => {
             <>
               <Link to="/jobs" className="block md:inline hover:underline">Post Job</Link>
               <Link to="/applicants" className="block md:inline hover:underline">Applicants</Link>
+              <Link to="/companies" className="block md:inline hover:underline">Company</Link>
               <Link to="/profile" className="block md:inline hover:underline">My Profile</Link>
             </>
           )}
 
           {user?.role === 'admin' && (
             <>
-              <Link to="/admin-dashboard" className="block md:inline hover:underline">Admin Dashboard</Link>
-              <Link to="/manage-users" className="block md:inline hover:underline">Manage Users</Link>
+              <Link to="/admin" className="block md:inline hover:underline">Admin Dashboard</Link>
               <Link to="/profile" className="block md:inline hover:underline">My Profile</Link>
             </>
           )}
