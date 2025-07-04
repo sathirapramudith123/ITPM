@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaStar, FaSearch, FaCommentAlt, FaUser, FaBriefcase, FaArrowRight } from 'react-icons/fa';
+import { FaStar, FaSearch, FaCommentAlt, FaBuilding, FaBriefcase, FaArrowRight } from 'react-icons/fa';
 
 const HomePage = ({ feedbacks, jobs }) => {
   return (
@@ -46,6 +46,13 @@ const HomePage = ({ feedbacks, jobs }) => {
             to="/feedback"
             color="purple"
           />
+          <FeatureCard 
+            icon={<FaBuilding className="text-green-600" size={24} />}
+            title="Company List"
+            description="Browse trusted companies and explore career opportunities"
+            to="/companylist"
+            color="green"
+          />
         </div>
       </SectionWrapper>
 
@@ -62,7 +69,7 @@ const HomePage = ({ feedbacks, jobs }) => {
         )}
         <div className="text-center mt-8">
           <Link 
-            to="/jobs" 
+            to="/joblist" 
             className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium"
           >
             View all job opportunities <FaArrowRight className="ml-2" />
