@@ -24,6 +24,7 @@ const Navbar = () => {
             <>
               <Link to="/post-job" className="hover:underline">Post Job</Link>
               <Link to="/applicants" className="hover:underline">Applicants</Link>
+              <Link to="/profile" className="hover:underline">My Profile</Link>
             </>
           )}
 
@@ -31,6 +32,7 @@ const Navbar = () => {
             <>
               <Link to="/admin-dashboard" className="hover:underline">Admin Dashboard</Link>
               <Link to="/manage-users" className="hover:underline">Manage Users</Link>
+              <Link to="/profile" className="hover:underline">My Profile</Link>
             </>
           )}
 
