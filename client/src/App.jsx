@@ -15,7 +15,7 @@ import PrivacyPolicy from './condition/privacy&policy';
 import TermsOfService from './condition/TermsofService';
 import CookiePolicy from './condition/CookiePolicy';
 import CompanyList from './pages/companylist';
-import  Profile  from './pages/Profile';
+import Profile from './pages/Profile';
 
 function App() {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -41,7 +41,7 @@ function App() {
             <Route path='/terms-of-service' element={<TermsOfService />} />
             <Route path='/cookies' element={<CookiePolicy />} />
             <Route path='/companylist' element={<CompanyList />} />
-            <Route path='/profile' element={<Profile/>}/>
+            <Route path='/profile' element={<Profile/>} />
           </Routes>
         </main>
         <Footer />
