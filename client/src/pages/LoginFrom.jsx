@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ const LoginForm = () => {
 
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -25,14 +27,24 @@ const LoginForm = () => {
     try {
       const response = await axios.post('http://localhost:5000/api/users/login', formData);
 
-      // Save token (optional, for auth)
+      // Save token and user info
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data));
 
       setSuccess('Login successful!');
       console.log('Logged in:', response.data);
 
-      // Redirect or update UI as needed
+      // Role-based navigation
+      const role = response.data.role;
+      if (role === 'admin') {
+        navigate('/admin');
+      } else if (role === 'jobemployer') {
+        navigate('/jobs');
+      } else if (role === 'jobseeker') {
+        navigate('/');
+      } else {
+        navigate('/profile');
+      }
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
       console.error('Login error:', err);
