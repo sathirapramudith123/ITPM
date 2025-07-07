@@ -16,5 +16,8 @@
     "url": "https://github.com/sathirapramudith123/ITPM/issues"
   },
   "homepage": "https://github.com/sathirapramudith123/ITPM#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "multer": "^2.0.1"
+  }
 }

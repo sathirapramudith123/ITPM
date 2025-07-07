@@ -7,6 +7,7 @@ import resumeRoutes from './routes/resumeRoutes.js';
 import companyRoutes from './routes/companyRoutes.js';
 import jobRoutes from './routes/jobRoutes.js';
 import feedbackRoutes from './routes/feedbackRoutes.js';
+import path from 'path';
 
 dotenv.config();
 connectDB();
@@ -14,6 +15,9 @@ connectDB();
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Serve uploaded avatars statically
+app.use('../uploads/avatars', express.static(path.join(process.cwd(), 'uploads/avatars')));
 
 // Routes
 app.use('/api/users', userRoutes);

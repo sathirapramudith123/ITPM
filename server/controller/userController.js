@@ -108,7 +108,15 @@ export const getUserById = async (req, res) => {
 // Update user
 export const updateUser = async (req, res) => {
   try {
-    const updates = req.body;
+    let updates = req.body;
+    // If avatar file is uploaded, set avatar path
+    if (req.file) {
+      updates.avatar = `/uploads/avatars/${req.file.filename}`;
+    }
+    // Remove avatar if empty string is sent
+    if (updates.avatar === '') {
+      updates.avatar = undefined;
+    }
     const user = await User.findByIdAndUpdate(
       req.params.id,
       updates,
