@@ -69,3 +69,39 @@ export const deleteJob = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Apply to a job
+export const applyToJob = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const job = await Job.findById(req.params.jobId);
+    if (!job) return res.status(404).json({ message: 'Job not found' });
+    // Prevent duplicate applications
+    if (job.applicants.some(app => app.user.toString() === userId)) {
+      return res.status(400).json({ message: 'You have already applied to this job.' });
+    }
+    job.applicants.push({ user: userId });
+    await job.save();
+    res.json({ message: 'Application successful' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Get jobs the current user has applied to
+export const getAppliedJobs = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const jobs = await Job.find({ 'applicants.user': userId })
+      .sort({ createdAt: -1 });
+    // Optionally populate company name if needed
+    res.json(jobs.map(job => ({
+      _id: job._id,
+      title: job.title,
+      companyName: job.companyProfile,
+      appliedAt: job.applicants.find(app => app.user.toString() === userId)?.appliedAt,
+    })));
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

@@ -16,6 +16,10 @@ const jobSchema = new mongoose.Schema({
   jobType: { 
     type: String, required: true 
   },
+  applicants: [{
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    appliedAt: { type: Date, default: Date.now }
+  }],
 }, { timestamps: true });
 
 export default mongoose.model('Job', jobSchema);

@@ -62,6 +62,18 @@ const Footer = () => {
               <li>123 Job Street, Tech City</li>
               <li>+1 (555) 123-4567</li>
             </ul>
+            <div className="mt-4 rounded overflow-hidden shadow-lg">
+              <iframe
+                title="Google Map"
+                src="https://www.google.com/maps?q=123+Job+Street,+Tech+City&output=embed"
+                width="100%"
+                height="150"
+                style={{ border: 0 }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
           </div>
         </div>
         
