@@ -2,21 +2,20 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/user.js';
 
-// Generate JWT Token
+// Generate JWT
 const generateToken = (id, role) => {
   return jwt.sign({ id, role }, process.env.JWT_SECRET, {
     expiresIn: '5m',
   });
 };
 
-// @desc Register new user
-// @route POST /api/users/register
+// Register
 export const registerUser = async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
 
     if (!username || !email || !password || !role) {
-      return res.status(400).json({ message: 'All fields are required' });
+      return res.status(400).json({ message: 'All fields required' });
     }
 
     const userExists = await User.findOne({ email });
@@ -38,7 +37,7 @@ export const registerUser = async (req, res) => {
       username: user.username,
       email: user.email,
       role: user.role,
-      token,
+      token
     });
   } catch (error) {
     console.error('Register error:', error.message);
@@ -46,15 +45,10 @@ export const registerUser = async (req, res) => {
   }
 };
 
-// @desc Login user
-// @route POST /api/users/login
+// Login
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(400).json({ message: 'Email and password required' });
-    }
 
     const user = await User.findOne({ email });
     if (!user || !(await bcrypt.compare(password, user.password))) {
@@ -68,7 +62,7 @@ export const loginUser = async (req, res) => {
       username: user.username,
       email: user.email,
       role: user.role,
-      token,
+      token
     });
   } catch (error) {
     console.error('Login error:', error.message);
@@ -76,8 +70,7 @@ export const loginUser = async (req, res) => {
   }
 };
 
-// @desc Get all users
-// @route GET /api/users
+// Get all users
 export const getAllUsers = async (req, res) => {
   try {
     const users = await User.find().select('-password');
@@ -88,19 +81,55 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
-// ✅ @desc Count Job Seekers and Job Employers
-// @route GET /api/users/counts
+// Get user counts
 export const getUserCounts = async (req, res) => {
   try {
-    const jobSeekerCount = await User.countDocuments({ role: 'jobseeker' });
-    const jobEmployerCount = await User.countDocuments({ role: 'jobemployer' });
-
-    res.json({
-      jobSeekers: jobSeekerCount,
-      jobEmployers: jobEmployerCount,
-    });
+    const jobSeekers = await User.countDocuments({ role: 'jobseeker' });
+    const jobEmployers = await User.countDocuments({ role: 'jobemployer' });
+    res.json({ jobSeekers, jobEmployers });
   } catch (error) {
-    console.error('Error counting users:', error.message);
+    console.error('Count error:', error.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Get user by ID
+export const getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select('-password');
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.json(user);
+  } catch (error) {
+    console.error('Get user by ID error:', error.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Update user
+export const updateUser = async (req, res) => {
+  try {
+    const updates = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      updates,
+      { new: true, runValidators: true }
+    ).select('-password');
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.json(user);
+  } catch (error) {
+    console.error('Update user error:', error.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Delete user
+export const deleteUser = async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.json({ message: 'User deleted successfully' });
+  } catch (error) {
+    console.error('Delete user error:', error.message);
     res.status(500).json({ message: 'Server error' });
   }
 };

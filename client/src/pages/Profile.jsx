@@ -3,23 +3,23 @@ import axios from 'axios';
 
 const Profile = () => {
   const [userData, setUserData] = useState({
-    name: '',
+    username: '',
     email: '',
     avatar: '',
     preferences: '',
     address: ''
   });
-
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
 
+  const token = localStorage.getItem('token');
+  const decoded = token ? JSON.parse(atob(token.split('.')[1])) : null;
+  const userId = decoded?.id;
+
   const fetchProfile = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const res = await axios.get('/api/users/profile', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+      const res = await axios.get(`http://localhost:5000/api/users/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` }
       });
       setUserData(res.data);
       setLoading(false);
@@ -41,11 +41,8 @@ const Profile = () => {
     e.preventDefault();
     setMessage('');
     try {
-      const token = localStorage.getItem('token');
-      const res = await axios.put('/api/users/profile', userData, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+      const res = await axios.put(`http://localhost:5000/api/users/${userId}`, userData, {
+        headers: { Authorization: `Bearer ${token}` }
       });
       setMessage('Profile updated successfully!');
     } catch (error) {
@@ -69,8 +66,8 @@ const Profile = () => {
           <label className="block text-gray-700">Name</label>
           <input
             type="text"
-            name="name"
-            value={userData.name}
+            name="username"
+            value={userData.username}
             onChange={handleChange}
             className="w-full border rounded px-3 py-2"
             required
@@ -82,9 +79,8 @@ const Profile = () => {
             type="email"
             name="email"
             value={userData.email}
-            onChange={handleChange}
-            className="w-full border rounded px-3 py-2"
             disabled
+            className="w-full border rounded px-3 py-2"
           />
         </div>
         <div>
@@ -107,7 +103,6 @@ const Profile = () => {
             className="w-full border rounded px-3 py-2"
           />
         </div>
-
         <button
           type="submit"
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
