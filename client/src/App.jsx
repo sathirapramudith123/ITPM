@@ -29,7 +29,7 @@ function App() {
         <Navbar />
         <main className="flex-grow">
           <Routes>
-            <Route path="/" element={<HomePage feedbacks={feedbacks} jobs={jobs} />} />
+            <Route path="/" element={<HomePage  />} />
             <Route path="/register" element={<RegisterForm />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/resume" element={<ResumeProfile />} />

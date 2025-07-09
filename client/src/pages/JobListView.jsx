@@ -33,8 +33,9 @@ const JobListView = ({ companies }) => {
     fetchJobs(term);
   };
 
+  // ✅ Fixed: use _id instead of id
   const getCompanyName = (companyId) => {
-    const company = companies.find((c) => c.id === companyId);
+    const company = companies.find((c) => c._id === companyId);
     return company ? company.name : 'Unknown';
   };
 
