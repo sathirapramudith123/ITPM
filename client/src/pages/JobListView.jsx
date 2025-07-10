@@ -123,12 +123,12 @@ const JobListView = ({ companies }) => {
                 <div className="mt-4 flex items-center">
                   <div className="flex-shrink-0">
                     <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
-                      {getCompanyName(job.companyId).charAt(0)}
+                      {job.companyProfile.charAt(0)}
                     </div>
                   </div>
                   <div className="ml-3">
                     <p className="text-sm font-medium text-gray-900">
-                      {getCompanyName(job.companyId)}
+                      {job.companyProfile}
                     </p>
                     <div className="flex space-x-1 text-sm text-gray-500">
                       <span>{new Date(job.createdAt).toLocaleDateString()}</span>

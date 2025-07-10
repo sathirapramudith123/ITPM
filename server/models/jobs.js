@@ -10,8 +10,10 @@ const jobSchema = new mongoose.Schema({
   category: { 
     type: String, required: true 
   },
-  companyProfile: { 
-    type: String, required: true 
+  companyId: { 
+    type: mongoose.Schema.Types.ObjectId,
+     ref: 'Company',
+     required: true 
   },
   jobType: { 
     type: String, required: true 
