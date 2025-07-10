@@ -107,10 +107,15 @@ const Profile = () => {
         <div className="absolute -bottom-12">
           {avatarPreview && (
             <img
-              src={avatarPreview.startsWith('http') ? avatarPreview : `${window.location.origin}${avatarPreview}`}
+              src={
+                avatarPreview.startsWith('http')
+                  ? avatarPreview
+                  : `http://localhost:5000${avatarPreview}`
+              }
               alt="Avatar"
-              className="w-24 h-24 rounded-full border-4 border-white shadow-lg object-cover"
+              className="w-40 h-40 rounded-full border-4 border-white shadow-lg object-cover"
             />
+
           )}
         </div>
       </div>
