@@ -44,6 +44,8 @@ function App() {
             <Route path='/companylist' element={<CompanyList />} />
             <Route path='/profile' element={<Profile/>} />
             <Route path='/applicants' element={<Applicants />} />
+
+            
             {/* Add more routes as needed */}
           </Routes>
         </main>

@@ -41,6 +41,7 @@ const Navbar = () => {
               <Link to="/applicants" className="block md:inline hover:underline">Applicants</Link>
               <Link to="/resume" className="block md:inline hover:underline">Resume</Link>
               <Link to="/profile" className="block md:inline hover:underline">My Profile</Link>
+
             </>
           )}
 
@@ -50,6 +51,8 @@ const Navbar = () => {
               <Link to="/applicants" className="block md:inline hover:underline">Applicants</Link>
               <Link to="/companies" className="block md:inline hover:underline">Company</Link>
               <Link to="/profile" className="block md:inline hover:underline">My Profile</Link>
+
+
             </>
           )}
 
@@ -64,6 +67,7 @@ const Navbar = () => {
             <>
               <Link to="/login" className="block md:inline hover:underline">Login</Link>
               <Link to="/register" className="block md:inline hover:underline">Register</Link>
+
             </>
           ) : (
             <button onClick={handleLogout} className="block md:inline hover:underline">
