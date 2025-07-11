@@ -33,7 +33,6 @@ const JobListView = ({ companies }) => {
     fetchJobs(term);
   };
 
-  // ✅ Fixed: use _id instead of id
   const getCompanyName = (companyId) => {
     const company = companies.find((c) => c._id === companyId);
     return company ? company.name : 'Unknown';
@@ -47,6 +46,7 @@ const JobListView = ({ companies }) => {
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedJob(null);
+    setApplyMessage('');
   };
 
   const handleApply = async (jobId) => {
@@ -59,6 +59,21 @@ const JobListView = ({ companies }) => {
       setApplyMessage('Application submitted successfully!');
     } catch (error) {
       setApplyMessage(error.response?.data?.message || 'Failed to apply.');
+    }
+  };
+
+  const getJobTypeStyle = (type) => {
+    switch (type) {
+      case 'Full-time':
+        return 'bg-green-100 text-green-800';
+      case 'Part-time':
+        return 'bg-blue-100 text-blue-800';
+      case 'Internship':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'Remote':
+        return 'bg-purple-100 text-purple-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -106,11 +121,7 @@ const JobListView = ({ companies }) => {
               <div className="flex-1 bg-white p-6 flex flex-col">
                 <div className="flex-1">
                   <div className="flex items-center mb-3">
-                    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                      job.jobType === 'Full-time' ? 'bg-green-100 text-green-800' :
-                      job.jobType === 'Part-time' ? 'bg-blue-100 text-blue-800' :
-                      'bg-purple-100 text-purple-800'
-                    }`}>
+                    <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getJobTypeStyle(job.jobType)}`}>
                       {job.jobType}
                     </span>
                     <span className="ml-2 px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">
@@ -123,12 +134,12 @@ const JobListView = ({ companies }) => {
                 <div className="mt-4 flex items-center">
                   <div className="flex-shrink-0">
                     <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
-                      {job.companyProfile.charAt(0)}
+                      {getCompanyName(job.companyId).charAt(0)}
                     </div>
                   </div>
                   <div className="ml-3">
                     <p className="text-sm font-medium text-gray-900">
-                      {job.companyProfile}
+                      {getCompanyName(job.companyId)}
                     </p>
                     <div className="flex space-x-1 text-sm text-gray-500">
                       <span>{new Date(job.createdAt).toLocaleDateString()}</span>
@@ -149,16 +160,15 @@ const JobListView = ({ companies }) => {
         </div>
       )}
 
-      {/* Job Details Modal */}
       {isModalOpen && selectedJob && (
         <div className="fixed z-10 inset-0 overflow-y-auto">
           <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div className="fixed inset-0 transition-opacity" aria-hidden="true">
               <div className="absolute inset-0 bg-gray-500 opacity-75" onClick={closeModal}></div>
             </div>
-            
+
             <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            
+
             <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start">
@@ -176,20 +186,16 @@ const JobListView = ({ companies }) => {
                         </svg>
                       </button>
                     </div>
-                    
+
                     <div className="flex items-center mt-2 mb-4">
-                      <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                        selectedJob.jobType === 'Full-time' ? 'bg-green-100 text-green-800' :
-                        selectedJob.jobType === 'Part-time' ? 'bg-blue-100 text-blue-800' :
-                        'bg-purple-100 text-purple-800'
-                      }`}>
+                      <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getJobTypeStyle(selectedJob.jobType)}`}>
                         {selectedJob.jobType}
                       </span>
                       <span className="ml-2 px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">
                         {selectedJob.category}
                       </span>
                     </div>
-                    
+
                     <div className="flex items-center mb-6">
                       <div className="flex-shrink-0">
                         <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg">
@@ -205,12 +211,12 @@ const JobListView = ({ companies }) => {
                         </p>
                       </div>
                     </div>
-                    
+
                     <div className="mt-4">
                       <h4 className="text-lg font-semibold text-gray-900 mb-2">Job Description</h4>
                       <p className="text-gray-700 whitespace-pre-line">{selectedJob.description}</p>
                     </div>
-                    
+
                     {selectedJob.requirements && (
                       <div className="mt-4">
                         <h4 className="text-lg font-semibold text-gray-900 mb-2">Requirements</h4>
@@ -221,8 +227,6 @@ const JobListView = ({ companies }) => {
                         </ul>
                       </div>
                     )}
-                    
-
                   </div>
                 </div>
               </div>

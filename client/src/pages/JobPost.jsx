@@ -13,7 +13,7 @@ const JobVacancyManager = () => {
     title: '',
     description: '',
     category: '',
-    companyProfile: '',
+    companyId: '',
     jobType: '',
   });
   const [editIndex, setEditIndex] = useState(null);
@@ -80,7 +80,7 @@ const JobVacancyManager = () => {
       title: '',
       description: '',
       category: '',
-      companyProfile: '',
+      companyId: '',
       jobType: '',
     });
   };
@@ -150,15 +150,15 @@ const JobVacancyManager = () => {
         <div>
           <label className="block text-sm font-medium text-gray-700">Company</label>
           <select
-            name="companyProfile"
-            value={formData.companyProfile}
+            name="companyId"
+            value={formData.companyId}
             onChange={handleChange}
             className="mt-1 block w-full border px-3 py-2 rounded-md shadow-sm"
             required
           >
             <option value="">Select a company</option>
             {companies.map((company) => (
-              <option key={company._id} value={company.name}>
+              <option key={company._id} value={company._id}>
                 {company.name}
               </option>
             ))}
