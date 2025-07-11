@@ -19,7 +19,7 @@ const JobVacancyManager = () => {
   const [editIndex, setEditIndex] = useState(null);
   const [editJobId, setEditJobId] = useState(null);
 
-  const pdfRef = useRef(); // PDF Target
+  const pdfRef = useRef();
 
   useEffect(() => {
     axios.get(JOBS_API_URL)
@@ -61,7 +61,13 @@ const JobVacancyManager = () => {
 
   const handleEdit = (index) => {
     const job = jobs[index];
-    setFormData({ ...job });
+    setFormData({
+      title: job.title,
+      description: job.description,
+      category: job.category,
+      companyId: job.companyId,
+      jobType: job.jobType,
+    });
     setEditIndex(index);
     setEditJobId(job._id);
   };
@@ -85,7 +91,6 @@ const JobVacancyManager = () => {
     });
   };
 
-  // Generate PDF
   const generatePDF = () => {
     const input = pdfRef.current;
     html2canvas(input, {
@@ -208,7 +213,6 @@ const JobVacancyManager = () => {
 
         {/* PDF Export Area */}
         <div ref={pdfRef} className="bg-white p-8 rounded-md space-y-6">
-          {/* PDF Header */}
           <div className="text-center border-b pb-4 mb-4">
             <h1 className="text-3xl font-bold text-gray-900">Job Listings Report</h1>
             <p className="text-gray-600 text-sm">Generated on {new Date().toLocaleDateString()}</p>
@@ -219,14 +223,14 @@ const JobVacancyManager = () => {
           ) : (
             <ul className="space-y-6">
               {jobs.map((job, index) => (
-                <li
-                  key={job._id}
-                  className="border border-gray-300 p-4 rounded-lg shadow-sm"
-                >
+                <li key={job._id} className="border border-gray-300 p-4 rounded-lg shadow-sm">
                   <h2 className="text-xl font-semibold text-blue-800">{job.title}</h2>
                   <p className="text-gray-700 mt-1"><strong>Description:</strong> {job.description}</p>
                   <p className="text-gray-700"><strong>Category:</strong> {job.category}</p>
-                  <p className="text-gray-700"><strong>Company:</strong> {job.companyProfile}</p>
+                  <p className="text-gray-700">
+                    <strong>Company:</strong>{' '}
+                    {companies.find((c) => c._id === job.companyId)?.name || 'Unknown Company'}
+                  </p>
                   <p className="text-gray-700"><strong>Type:</strong> {job.jobType}</p>
                   <div className="mt-2 space-x-3 no-print">
                     <button

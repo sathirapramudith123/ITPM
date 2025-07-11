@@ -38,6 +38,7 @@ const Navbar = () => {
           {user?.role === 'jobseeker' && (
             <>
               <Link to="/joblist" className="block md:inline hover:underline">Find Jobs</Link>
+              <Link to="/applicants" className="block md:inline hover:underline">Applicants</Link>
               <Link to="/resume" className="block md:inline hover:underline">Resume</Link>
               <Link to="/profile" className="block md:inline hover:underline">My Profile</Link>
             </>

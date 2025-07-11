@@ -4,6 +4,14 @@ import Feedback from '../models/feedback.js';
 // Get all feedback
 export const getAllFeedback = async (req, res) => {
   try {
+    const {publicOnly} = req.query;
+    let filter = {};
+
+    if (publicOnly) {
+      filter.isPublic = true;
+    }
+
+
     const feedbacks = await Feedback.find().sort({ createdAt: -1 });
     res.json(feedbacks);
   } catch (error) {
