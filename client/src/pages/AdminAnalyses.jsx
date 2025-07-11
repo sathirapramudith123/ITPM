@@ -9,8 +9,8 @@ const PlatformUsageDashboard = () => {
   const [usageStats, setUsageStats] = useState({
     jobSeekers: {
       totalSignUps: 0,
-      completedProfiles: 850, // static or replace with backend data
-      avgJobsApplied: 5.2,     // static or replace with backend data
+      completedProfiles: 850,
+      avgJobsApplied: 5.2,
     },
     jobEmployers: {
       totalEmployers: 0,
@@ -20,7 +20,9 @@ const PlatformUsageDashboard = () => {
     }
   });
 
-  // Fetch counts from backend
+  const [employerJobCounts, setEmployerJobCounts] = useState([]);
+
+  // Fetch user counts
   useEffect(() => {
     const fetchUserCounts = async () => {
       try {
@@ -42,6 +44,20 @@ const PlatformUsageDashboard = () => {
     };
 
     fetchUserCounts();
+  }, []);
+
+  // Fetch employer job post counts
+  useEffect(() => {
+    const fetchEmployerJobCounts = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/api/jobs/stats/employer-job-counts');
+        setEmployerJobCounts(res.data);
+      } catch (error) {
+        console.error('Error fetching employer job counts:', error);
+      }
+    };
+
+    fetchEmployerJobCounts();
   }, []);
 
   const userTypePieData = [
@@ -67,8 +83,8 @@ const PlatformUsageDashboard = () => {
                 outerRadius={80}
                 label
               >
-                <Cell fill="#4299e1" /> {/* Job Seekers - Blue */}
-                <Cell fill="#48bb78" /> {/* Job Employers - Green */}
+                <Cell fill="#4299e1" />
+                <Cell fill="#48bb78" />
               </Pie>
               <Tooltip />
               <Legend />
@@ -76,9 +92,9 @@ const PlatformUsageDashboard = () => {
           </ResponsiveContainer>
         </div>
 
-        {/* Bar Chart for Employer Stats */}
+        {/* Bar Chart for Average Employer Stats */}
         <div className="bg-white rounded-xl shadow p-4">
-          <h2 className="text-xl font-semibold mb-4 text-center">Employer Job Statistics</h2>
+          <h2 className="text-xl font-semibold mb-4 text-center">Average Employer Stats</h2>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={[usageStats.jobEmployers]}>
               <XAxis dataKey="avgJobsPosted" hide />
@@ -91,6 +107,20 @@ const PlatformUsageDashboard = () => {
             </BarChart>
           </ResponsiveContainer>
         </div>
+      </div>
+
+      {/* Bar Chart: Total Jobs Posted by Each Employer */}
+      <div className="bg-white rounded-xl shadow p-4 mt-10">
+        <h2 className="text-xl font-semibold mb-4 text-center">Jobs Posted by Employers</h2>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={employerJobCounts}>
+            <XAxis dataKey="companyName" tick={{ fontSize: 12 }} interval={0} angle={-20} textAnchor="end" />
+            <YAxis allowDecimals={false} />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="totalJobsPosted" fill="#805ad5" name="Total Jobs Posted" />
+          </BarChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );

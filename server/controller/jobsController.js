@@ -105,3 +105,38 @@ export const getAppliedJobs = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+// Get number of jobs posted by each employer
+export const getEmployerJobCounts = async (req, res) => {
+  try {
+    const result = await Job.aggregate([
+      {
+        $group: {
+          _id: "$companyId",
+          totalJobsPosted: { $sum: 1 }
+        }
+      },
+      {
+        $lookup: {
+          from: "companies", // Make sure this matches your collection name
+          localField: "_id",
+          foreignField: "_id",
+          as: "companyInfo"
+        }
+      },
+      { $unwind: "$companyInfo" },
+      {
+        $project: {
+          companyName: "$companyInfo.name",
+          totalJobsPosted: 1
+        }
+      }
+    ]);
+
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
