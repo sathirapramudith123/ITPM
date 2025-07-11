@@ -82,11 +82,13 @@ export const getAllUsers = async (req, res) => {
 };
 
 // Get user counts
+// Get user counts
 export const getUserCounts = async (req, res) => {
   try {
     const jobSeekers = await User.countDocuments({ role: 'jobseeker' });
     const jobEmployers = await User.countDocuments({ role: 'jobemployer' });
-    res.json({ jobSeekers, jobEmployers });
+    const admins = await User.countDocuments({ role: 'admin' }); // ✅ New line
+    res.json({ jobSeekers, jobEmployers, admins }); // ✅ Include in response
   } catch (error) {
     console.error('Count error:', error.message);
     res.status(500).json({ message: 'Server error' });

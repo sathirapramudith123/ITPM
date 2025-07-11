@@ -17,12 +17,12 @@ const PlatformUsageDashboard = () => {
       avgJobsPosted: 12,
       avgViewsPerJob: 150,
       avgApplicationsPerJob: 45,
-    }
+    },
+    admins: 0, // ✅ Added admin state
   });
 
   const [employerJobCounts, setEmployerJobCounts] = useState([]);
 
-  // Fetch user counts
   useEffect(() => {
     const fetchUserCounts = async () => {
       try {
@@ -36,7 +36,8 @@ const PlatformUsageDashboard = () => {
           jobEmployers: {
             ...prev.jobEmployers,
             totalEmployers: res.data.jobEmployers,
-          }
+          },
+          admins: res.data.admins, // ✅ Set admin count
         }));
       } catch (error) {
         console.error('Error fetching user counts:', error);
@@ -46,7 +47,6 @@ const PlatformUsageDashboard = () => {
     fetchUserCounts();
   }, []);
 
-  // Fetch employer job post counts
   useEffect(() => {
     const fetchEmployerJobCounts = async () => {
       try {
@@ -63,7 +63,10 @@ const PlatformUsageDashboard = () => {
   const userTypePieData = [
     { name: 'Job Seekers', value: usageStats.jobSeekers.totalSignUps },
     { name: 'Job Employers', value: usageStats.jobEmployers.totalEmployers },
+    { name: 'Admins', value: usageStats.admins }, // ✅ Added admins to chart
   ];
+
+  const pieColors = ['#4299e1', '#48bb78', '#f56565']; // ✅ Colors for Job Seeker, Employer, Admin
 
   return (
     <div className="max-w-7xl mx-auto p-6">
@@ -83,8 +86,9 @@ const PlatformUsageDashboard = () => {
                 outerRadius={80}
                 label
               >
-                <Cell fill="#4299e1" />
-                <Cell fill="#48bb78" />
+                {userTypePieData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
+                ))}
               </Pie>
               <Tooltip />
               <Legend />
@@ -114,7 +118,13 @@ const PlatformUsageDashboard = () => {
         <h2 className="text-xl font-semibold mb-4 text-center">Jobs Posted by Employers</h2>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={employerJobCounts}>
-            <XAxis dataKey="companyName" tick={{ fontSize: 12 }} interval={0} angle={-20} textAnchor="end" />
+            <XAxis
+              dataKey="companyName"
+              tick={{ fontSize: 12 }}
+              interval={0}
+              angle={-20}
+              textAnchor="end"
+            />
             <YAxis allowDecimals={false} />
             <Tooltip />
             <Legend />
