@@ -17,6 +17,7 @@ import CookiePolicy from './condition/CookiePolicy';
 import CompanyList from './pages/companylist';
 import Profile from './pages/Profile';
 import Applicants from './pages/Applicants';
+import ChatBotWidget from './components/chatbot/ChatBot';
 
 function App() {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -44,12 +45,10 @@ function App() {
             <Route path='/companylist' element={<CompanyList />} />
             <Route path='/profile' element={<Profile/>} />
             <Route path='/applicants' element={<Applicants />} />
-
-            
-            {/* Add more routes as needed */}
           </Routes>
         </main>
         <Footer />
+        <ChatBotWidget /> 
       </div>
     </Router>
   );
