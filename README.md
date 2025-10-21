@@ -5,7 +5,7 @@ and MongoDB, Career Pulse ensures scalability and performance. Additional featur
 The project is open-source, with clear documentation for setup and contribution, making it ideal for developers looking to collaborate on improving recruitment technology.
 With future plans for video interviews and skills assessments, Career Pulse aims to revolutionize the job search process.
 
-
+client
 ```
 ├── 📁 public/
 │   ├── 📁 logo/
@@ -53,5 +53,47 @@ With future plans for video interviews and skills assessments, Career Pulse aims
 ├── 📄 postcss.config.js
 ├── 📄 tailwind.config.js
 └── 📄 vite.config.js
+
+```
+
+
+server
+```
+
+├── 📁 config/
+│   └── 📄 db.js
+├── 📁 controller/
+│   ├── 📄 companyController.js
+│   ├── 📄 feedbackController.js
+│   ├── 📄 jobsController.js
+│   ├── 📄 resumeController.js
+│   └── 📄 userController.js
+├── 📁 middleware/
+│   ├── 📄 authMiddleware.js
+│   └── 📄 uploadAvatar.js
+├── 📁 models/
+│   ├── 📄 company.js
+│   ├── 📄 feedback.js
+│   ├── 📄 jobs.js
+│   ├── 📄 resume.js
+│   └── 📄 user.js
+├── 📁 routes/
+│   ├── 📄 companyRoutes.js
+│   ├── 📄 feedbackRoutes.js
+│   ├── 📄 jobRoutes.js
+│   ├── 📄 resumeRoutes.js
+│   └── 📄 userRoutes.js
+├── 📁 uploads/
+│   └── 📁 avatars/
+│       ├── 🖼️ 1751907702827.jpeg
+│       ├── 🖼️ 1751907857805.jpeg
+│       ├── 🖼️ 1752029996682.jpg
+│       ├── 🖼️ 1752031151054.jpeg
+│       ├── 🖼️ 1752031154223.jpeg
+│       └── 🖼️ 1752110963391.jpg
+├── ⚙️ package-lock.json
+├── ⚙️ package.json
+└── 📄 server.js
+
 
 ```
