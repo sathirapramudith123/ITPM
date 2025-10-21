@@ -4,3 +4,54 @@ while employers can post detailed job listings, review candidates, and manage th
 and MongoDB, Career Pulse ensures scalability and performance. Additional features like customizable job alerts, application analytics, and an admin moderation system enhance the user experience.
 The project is open-source, with clear documentation for setup and contribution, making it ideal for developers looking to collaborate on improving recruitment technology.
 With future plans for video interviews and skills assessments, Career Pulse aims to revolutionize the job search process.
+
+
+```
+├── 📁 public/
+│   ├── 📁 logo/
+│   │   └── 🖼️ site logo.png
+│   └── 🖼️ vite.svg
+├── 📁 src/
+│   ├── 📁 assets/
+│   │   └── 🖼️ react.svg
+│   ├── 📁 components/
+│   │   ├── 📁 chatbot/
+│   │   │   └── 📄 ChatBot.jsx
+│   │   ├── 📄 Footer.jsx
+│   │   ├── 📄 HomeContainer.jsx
+│   │   ├── 📄 HomePage.jsx
+│   │   └── 📄 Navbar.jsx
+│   ├── 📁 condition/
+│   │   ├── 📄 CookiePolicy.jsx
+│   │   ├── 📄 TermsofService.jsx
+│   │   └── 📄 privacy&policy.jsx
+│   ├── 📁 images/
+│   │   ├── 🖼️ 2160348_I_need_everyone_to_give_me_their_best_ideas_iStock-863497498_copy_2876x1342.jpg
+│   │   └── 🖼️ GettyImages-2170485830.png
+│   ├── 📁 pages/
+│   │   ├── 📄 AdminAnalyses.jsx
+│   │   ├── 📄 Applicants.jsx
+│   │   ├── 📄 Company.jsx
+│   │   ├── 📄 JobListView.jsx
+│   │   ├── 📄 JobPost.jsx
+│   │   ├── 📄 LoginFrom.jsx
+│   │   ├── 📄 Profile.jsx
+│   │   ├── 📄 RegisterForm.jsx
+│   │   ├── 📄 ResumeProfile.jsx
+│   │   ├── 📄 companylist.jsx
+│   │   └── 📄 feedback.jsx
+│   ├── 🎨 App.css
+│   ├── 📄 App.jsx
+│   ├── 🎨 index.css
+│   └── 📄 main.jsx
+├── ⚙️ .gitignore
+├── 📝 README.md
+├── 📄 eslint.config.js
+├── 🌐 index.html
+├── ⚙️ package-lock.json
+├── ⚙️ package.json
+├── 📄 postcss.config.js
+├── 📄 tailwind.config.js
+└── 📄 vite.config.js
+
+```
